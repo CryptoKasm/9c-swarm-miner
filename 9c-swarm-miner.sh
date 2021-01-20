@@ -161,8 +161,8 @@ checkComposeFile() {
     if [ -f "docker-compose.yml" ]; then
         echo "   --Found file." 
     else
-        echo "   --Creating file..."
-        buildComposeFile
+        echo "   --TODO:Creating file..."
+        #buildComposeFile
     fi
 }
 

@@ -51,11 +51,16 @@ checkCompose() {
 
     if ! [ -x "$(command -v docker-compose)" ]; then
         echo "   --Installing..."
-        #curl -L https://github.com/docker/compose/releases/download/$(compose_release)/docker-compose-$(uname -s)-$(uname -m) \
-        #-o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+        curl -L https://github.com/docker/compose/releases/download/$(compose_release)/docker-compose-$(uname -s)-$(uname -m) \
+        -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
     else 
         echo "   --Installed."
     fi
+}
+
+# Check: Permissions
+checkPerms() {
+    # TODO Set proper perms for files
 }
 
 # Check: Prerequisites
@@ -185,10 +190,7 @@ checkSnapshot() {
     rm 9c-main-snapshot.zip
     
     echo " -> Preparing volumes..."
-    for ((i = 1 ; i <= $NC_MINERS ; i++)); do
-        # Need to find location of volumes or how to mount to VM for copying snapshot
-        #sudo cp -r ./* /var/lib/docker/volumes/c9-docker-compose_9c-miner1-volume/_data/
-    done
+    # TODO: Add function to copy contents to proper volumes depending on if Linux/Windows
 }
 
 # Run: Docker
@@ -210,7 +212,7 @@ checkDocker
 checkCompose
 checkConfig
 checkComposeFile
-checkSnapshot
+#checkSnapshot
 
 #############################################
 # Debug

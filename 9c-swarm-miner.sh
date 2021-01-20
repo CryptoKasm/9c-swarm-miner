@@ -136,7 +136,7 @@ EOF
 curl $COMPOSESNIPPETURL -s -o docker-compose.snippet
 source docker-compose.snippet
 mainPORT=31234
-for ((i = 1 ; i <= $NC_MINERS ; i++)); do
+for ((i=1; i<=$NC_MINERS; i++)); do
     PORT=$((mainPORT++))
     composeSnippet
 done
@@ -145,7 +145,7 @@ cat <<EOF >>$COMPOSEFILE
 volumes:
 EOF
 
-for ((i = 1 ; i <= $NC_MINERS ; i++)); do
+for ((i=1; i<=$NC_MINERS; i++)); do
 cat <<EOF >>$COMPOSEFILE
   swarm-miner$i-volume:
 EOF

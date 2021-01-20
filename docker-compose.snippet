@@ -1,4 +1,5 @@
-swarm-miner$i:
+composeSnippet() { cat <<EOF >>$COMPOSEFILE
+  swarm-miner$i:
     image: planetariumhq/ninechronicles-headless:git-81f6770a96ab0dda099535158cddf39b17574f6e
     cpus: 1
     mem_limit: $NC_RAM_LIMIT
@@ -28,3 +29,5 @@ swarm-miner$i:
       '--graphql-port=23061',
       "--private-key=$NC_PRIVATE_KEY"]
     restart: always
+EOF
+}

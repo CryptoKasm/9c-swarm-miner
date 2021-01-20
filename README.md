@@ -39,7 +39,10 @@ powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.Cr
 
 <br>
 
-* ***Congratulations! You are now running Docker Desktop with WSL Support!***<br>
+*Congratulations! You are now running Docker Desktop with WSL Support!*
+*Continue below, following the Linux instructions in your newly downloaded Ubuntu distro!*
+
+**TIP: Start your WSL Distro like any other program via the Shortcut Icon or by running wsl.exe**
 
 <br>
 
@@ -56,7 +59,7 @@ powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.Cr
 **Script Tasks**
 1. Install: Docker
 1. Install: Compose
-1. Install: Git
+1. Install: Git & Unzip
 1. Set Permissions
 1. Create Configuration File
 1. Create/Mange Snapshots
@@ -65,16 +68,28 @@ powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.Cr
 ## Usage
 1. ***Clone Repository***
 ```bash
-#Quick Download
+# Quick Download
 $ git clone https://github.com/CryptoKasm/9c-swarm-miner.git ~/9c-swarm-miner && cd 9c-swarm-miner
+$ chmod +x 9c-swarm-miner.sh
 ```
-2. ***Edit Configuration File***
+
+2. ***Run Script***
 ```bash
-#Quick Download
+# First run, will setup system. Checks for updates each run
+$ sudo ./9c-swarm-miner.sh
+```
+
+3. ***Edit Configuration File***
+```bash
+# Quick Download
 $ nano .settings.conf
 ```
 ```bash 
-#Example Configuration
+# Example Configuration
+
+# Nine Chronicles - CryptoKasm Swarm Miner
+
+DEBUG=0
 
 # Nine Chronicles Private Key **KEEP SECRET**
 NC_PRIVATE_KEY=
@@ -83,15 +98,13 @@ NC_PRIVATE_KEY=
 NC_PUBLIC_KEY=
 
 # Amount of Miners **DOCKER CONTAINERS**
-NC_WORKERS=
+NC_MINERS=1
 
-# Set RAM Per Worker **PROTECTION FROM MEMORY LEAKS** 
-NC_RAM_PER_WORKER=
-```
-3. ***Run Script***
-```bash
-#First run, will setup system. Checks for updates each run
-$ sudo ./9c-swarm-miner.sh
+# Set MAX RAM Per Miner **PROTECTION FROM MEMORY LEAKS** 
+NC_RAM_LIMIT=4096M
+
+# Set MIN RAM Per Miner **SAVES RESOURCES FOR THAT CONTAINER** 
+NC_RAM_RESERVE=2048M
 ```
 
 <br>

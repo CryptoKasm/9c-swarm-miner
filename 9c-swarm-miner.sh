@@ -202,7 +202,7 @@ checkSnapshot() {
 # Run: Docker
 runDocker() {
     echo ">Starting Docker..."
-    echo ">>Please edit settings.conf before running the dockers"
+    echo ">>Please edit .settings.conf before running the dockers"
     echo ">>Start Miners by running: docker-compose up -d "
     # docker-compose up -d
     echo

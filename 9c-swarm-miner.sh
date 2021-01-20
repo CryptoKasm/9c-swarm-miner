@@ -93,6 +93,8 @@ checkConfig() {
         cat > .settings.conf << EOF
 # Nine Chronicles - CryptoKasm Swarm Miner
 
+DEBUG=0
+
 # Nine Chronicles Private Key **KEEP SECRET**
 NC_PRIVATE_KEY=
 
@@ -100,13 +102,47 @@ NC_PRIVATE_KEY=
 NC_PUBLIC_KEY=
 
 # Amount of Miners **DOCKER CONTAINERS**
-NC_WORKERS=2
+NC_MINERS=2
 
-# Set RAM Per Worker **PROTECTION FROM MEMORY LEAKS** 
-NC_RAM_PER_WORKER=4096M
+# Set MAX RAM Per Miner **PROTECTION FROM MEMORY LEAKS** 
+NC_RAM_LIMIT=4096M
+
+# Set MIN RAM Per Miner **SAVES RESOURCES FOR THAT CONTAINER** 
+NC_RAM_RESERVE=2048M
 EOF
 
     fi
+}
+
+# Build Compose File
+buildComposeFile() {
+COMPOSEFILE=docker-compose.yml
+COMPOSESNIPPETURL="https://raw.githubusercontent.com/CryptoKasm/9c-swarm-miner/master/docker-compose.snippet"
+
+cat <<EOF >$COMPOSEFILE
+version: "2.4"
+
+services:
+EOF
+
+curl $COMPOSESNIPPETURL -s -o docker-compose.snippet
+source docker-compose.snippet
+for ((i = 1 ; i <= $NC_MINERS ; i++)); do
+    composeSnippet
+done
+
+cat <<EOF >>$COMPOSEFILE
+volumes:
+EOF
+
+for ((i = 1 ; i <= $NC_MINERS ; i++)); do
+cat <<EOF >>$COMPOSEFILE
+  swarm-miner$i-volume:
+EOF
+done
+
+echo "   --Cleaning temp file..."
+rm docker-compose.snippet
 }
 
 # Check: Compose File
@@ -120,23 +156,21 @@ checkComposeFile() {
     fi
 }
 
-# Build Compose File
-
 # Refresh: Snapshot
 checkSnapshot() {
     echo "> Refreshing Snapshot"
     echo "   --Cleaning docker environment..."
 
-    #docker-compose down -v      # Stops & deletes environment **snapshot**
-    #docker-compose --compatibility up -d        # Restarts to recreate clean environment
-    #docker-compose stop         # Stops cleaned environment for snapshot update
+    docker-compose down -v      # Stops & deletes environment **snapshot**
+    docker-compose --compatibility up -d        # Restarts to recreate clean environment
+    docker-compose stop         # Stops cleaned environment for snapshot update
     
     echo "   --Checking for old snapshot..."
     NC_SNAPSHOT=latest-snapshot/9c-main-snapshot.zip
     if [ -f "$NC_SNAPSHOT" ]; then
         echo "      -Snapshot found."
         echo "      -Deleting..."
-        #rm -rf latest-snapshot/*
+        rm -rf latest-snapshot/*
     else
         echo "      -Snapshot not found."
         mkdir -p latest-snapshot
@@ -151,7 +185,23 @@ checkSnapshot() {
     rm 9c-main-snapshot.zip
     
     echo " -> Preparing volumes..."
+    for ((i = 1 ; i <= $NC_MINERS ; i++)); do
+        # Need to find location of volumes or how to mount to VM for copying snapshot
+        #sudo cp -r ./* /var/lib/docker/volumes/c9-docker-compose_9c-miner1-volume/_data/
+    done
 }
+
+# Run: Docker
+runDocker() {
+    echo ">Starting Docker..."
+    docker-compose up -d
+
+    echo "   --Windows Monitor (Full Log): Goto Docker and you can access logging for each individual container."
+    echo "   --Windows Monitor (Mined Blocks Only): Search for Mined a block."
+    echo "   --Linux Monitor (Full Log): docker-compose logs --tail=100 -f"
+    echo "   --Linux Monitor (Mined Blocks Only): docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block"
+}
+
 
 #############################################
 # Main
@@ -159,6 +209,7 @@ checkPrereqs
 checkDocker
 checkCompose
 checkConfig
+checkComposeFile
 checkSnapshot
 
 #############################################

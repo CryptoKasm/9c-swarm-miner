@@ -6,6 +6,14 @@
 
 **This project was created to provide an easy solution for those wanting to mine their own income (NCG) via Docker containers. This branch holds automated scripts that setup the required environment to run these containers on both Linux & Windows 10, version 1903 or higher** 
 
+
+<br>
+
+#
+### Quick Tip: 
+- **Linux Users: Please skip down to [Section 2](#Linux) to begin install.**
+- **Windows Users: MAKE SURE TO START DOCKER, before continuing to [Section 2](#Linux).**
+#
 <br>
 
 # Windows 10
@@ -28,7 +36,7 @@
 ## Usage
 1. ***Run as administrator***
 ```PowerShell
-powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.CredentialCache]::DefaultNetworkCredentials;iwr('https://raw.githubusercontent.com/CryptoKasm/9c-swarm-miner/windows10/install_WSL2.ps1') -UseBasicParsing|iex"
+powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.CredentialCache]::DefaultNetworkCredentials;iwr('https://raw.githubusercontent.com/CryptoKasm/9c-swarm-miner/master/setup_windows.ps1') -UseBasicParsing|iex"
 ```
 2. ***Restart your computer***
 3. ***Run same command again, as administrator***

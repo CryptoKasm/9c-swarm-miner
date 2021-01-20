@@ -1,0 +1,5 @@
+# Ignore CryptoKasm
+ck
+
+# Ignore .settings.conf
+.settings.conf

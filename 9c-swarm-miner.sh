@@ -135,7 +135,9 @@ EOF
 
 curl $COMPOSESNIPPETURL -s -o docker-compose.snippet
 source docker-compose.snippet
+mainPORT=31233
 for ((i = 1 ; i <= $NC_MINERS ; i++)); do
+    PORT=$((++mainPORT))
     composeSnippet
 done
 

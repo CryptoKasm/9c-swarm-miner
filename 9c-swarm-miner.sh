@@ -61,6 +61,9 @@ checkCompose() {
 # Check: Permissions
 checkPerms() {
     # TODO Set proper perms for files
+    chmod +rw ./9c-swarm-miner.sh
+    chmod +rw ./docker-compose.yml
+    chmod +rw .settings.conf
 }
 
 # Check: Prerequisites
@@ -191,13 +194,16 @@ checkSnapshot() {
     
     echo " -> Preparing volumes..."
     # TODO: Add function to copy contents to proper volumes depending on if Linux/Windows
+    echo "      -Check TODO :D"
 }
 
 # Run: Docker
 runDocker() {
     echo ">Starting Docker..."
-    docker-compose up -d
-
+    echo ">>Please edit settings.conf before running the dockers"
+    echo ">>Start Miners by running: docker-compose up -d "
+    # docker-compose up -d
+    echo
     echo "   --Windows Monitor (Full Log): Goto Docker and you can access logging for each individual container."
     echo "   --Windows Monitor (Mined Blocks Only): Search for Mined a block."
     echo "   --Linux Monitor (Full Log): docker-compose logs --tail=100 -f"
@@ -212,8 +218,9 @@ checkDocker
 checkCompose
 checkConfig
 checkComposeFile
+checkPerms
 #checkSnapshot
-
+runDocker
 #############################################
 # Debug
 if [ "$DEBUG" == "1" ]; then

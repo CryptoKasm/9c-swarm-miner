@@ -1,12 +1,15 @@
-composeSnippet() { cat <<EOF >>$COMPOSEFILE
+composeSnippet() { 
+  mainPORT=31233
+  PORT=$((++mainPORT))
+  
+  cat <<EOF >>$COMPOSEFILE
   swarm-miner$i:
     image: planetariumhq/ninechronicles-headless:git-81f6770a96ab0dda099535158cddf39b17574f6e
     cpus: 1
     mem_limit: $NC_RAM_LIMIT
     mem_reservation: $NC_RAM_RESERVE
     ports:
-      - "31234:31234"
-      - "23061:23061"
+      - "$PORT:31234"
     volumes:
       - swarm-miner$i-volume:/app/data
       - ./keystore:/app/planetarium/keystore

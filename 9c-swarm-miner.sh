@@ -61,7 +61,7 @@ checkCompose() {
 # Check: Permissions
 checkPerms() {
     # TODO Set proper perms for files
-    chmod +rw ./9c-swarm-miner.sh
+    chmod +xrw ./9c-swarm-miner.sh
     chmod +rw ./docker-compose.yml
     chmod +rw .settings.conf
 }
@@ -77,16 +77,16 @@ checkPrereqs() {
         echo "   --Git: Installed."
     fi
     if ! [ -x "$(command -v curl)" ]; then
-        echo "   --Git: Installing..."
+        echo "   --Curl: Installing..."
         sudo apt install -y curl
     else 
-        echo "   --Git: Installed."
+        echo "   --Curl: Installed."
     fi
     if ! [ -x "$(command -v unzip)" ]; then
-        echo "   --Git: Installing..."
+        echo "   --Unzip: Installing..."
         sudo apt install -y unzip
     else 
-        echo "   --Git: Installed."
+        echo "   --Unzip: Installed."
     fi
 }
 
@@ -101,7 +101,11 @@ checkConfig() {
         cat > .settings.conf << EOF
 # Nine Chronicles - CryptoKasm Swarm Miner
 
+# Turn on/off debugging for this script (1/0)
 DEBUG=0
+
+# Set log level for all miners
+LOG_LEVEL=debug
 
 # Nine Chronicles Private Key **KEEP SECRET**
 NC_PRIVATE_KEY=
@@ -136,8 +140,10 @@ EOF
 curl $COMPOSESNIPPETURL -s -o docker-compose.snippet
 source docker-compose.snippet
 mainPORT=31234
+mainGqlPort=9331
 for ((i=1; i<=$NC_MINERS; i++)); do
     PORT=$((mainPORT++))
+    GQL_PORT=$((mainGqlPort++))
     composeSnippet
 done
 
@@ -162,7 +168,7 @@ checkComposeFile() {
         echo "   --Found file." 
     else
         echo "   --TODO:Creating file..."
-        #buildComposeFile
+        buildComposeFile
     fi
 }
 
@@ -172,12 +178,12 @@ checkSnapshot() {
     echo "   --Cleaning docker environment..."
 
     docker-compose down -v      # Stops & deletes environment **snapshot**
-    docker-compose --compatibility up -d        # Restarts to recreate clean environment
+    docker-compose up -d        # Restarts to recreate clean environment
     docker-compose stop         # Stops cleaned environment for snapshot update
     
     echo "   --Checking for old snapshot..."
-    NC_SNAPSHOT=latest-snapshot/9c-main-snapshot.zip
-    if [ -f "$NC_SNAPSHOT" ]; then
+    NC_SNAPSHOT=latest-snapshot/9c-main
+    if [ -d "$NC_SNAPSHOT" ]; then
         echo "      -Snapshot found."
         echo "      -Deleting..."
         rm -rf latest-snapshot/*
@@ -195,8 +201,22 @@ checkSnapshot() {
     rm 9c-main-snapshot.zip
     
     echo " -> Preparing volumes..."
-    # TODO: Add function to copy contents to proper volumes depending on if Linux/Windows
-    echo "      -Check TODO :D"
+    
+    if grep -q Microsoft /proc/version; then
+        echo "Ubuntu on Windows"
+        #TODO Verify docker volume location for WSL
+        #VOLUMES=/var/lib/docker/volumes/9c-swarm-miner_swarm-miner$((i))-volume/_data/
+    else
+        echo " Native Linux"
+        VOLUMES=/var/lib/docker/volumes/9c-swarm-miner_swarm-miner$((i))-volume/_data/
+    fi
+
+    for ((i=1; i<=$NC_MINERS; i++)); do
+        echo "   --Copying to swarm-miner$i-volume..."
+        # NOTE: The location and the name of the docker volumes may differ, depending on the system.
+        sudo cp -r ./* $VOLUMES
+    done
+    echo "   --Volumes have been updated with newest snapshot."
 }
 
 # Run: Docker
@@ -204,12 +224,13 @@ runDocker() {
     echo ">Starting Docker..."
     echo ">>Please edit .settings.conf before running the dockers"
     echo ">>Start Miners by running: docker-compose up -d "
-    # docker-compose up -d
+    docker-compose up -d
     echo
     echo "   --Windows Monitor (Full Log): Goto Docker and you can access logging for each individual container."
     echo "   --Windows Monitor (Mined Blocks Only): Search for Mined a block."
     echo "   --Linux Monitor (Full Log): docker-compose logs --tail=100 -f"
     echo "   --Linux Monitor (Mined Blocks Only): docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block"
+    echo "   --Linux Monitor (Mined/Reorg/Append failed events): docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a|reorged|Append failed'"
 }
 
 

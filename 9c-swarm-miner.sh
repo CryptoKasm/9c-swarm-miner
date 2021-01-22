@@ -16,24 +16,40 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+# Check: Platform
+checkPlatform() {
+    if grep -q icrosoft /proc/version; then
+        echo "> Platform: Ubuntu on Windows (WSL)"
+        PLATFORM="WSL"
+        
+    else
+        echo "> Platform: Native Linux"
+        PLATFORM="NATIVE"
+    fi
+}
+
 # Check: Docker
 checkDocker() {
     echo "> Checking for Docker"
     if ! [ -x "$(command -v docker)" ]; then
-        echo "   --Installing..."
-        #Removing leftovers if Docker is not found
-        sudo apt remove --yes docker docker-engine docker.io containerd runc
-        sudo apt update
-        sudo apt --yes --no-install-recommends install apt-transport-https ca-certificates
-        wget --quiet --output-document=- https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-        sudo add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable"
-        sudo apt update
-        sudo apt --yes --no-install-recommends install docker-ce docker-ce-cli containerd.io
-        sudo usermod --append --groups docker "$USER"
-        sudo systemctl enable docker
+        if [ $PLATFORM = "NATIVE" ]; then
+            echo "   --Installing..."
+            # Removing leftovers if Docker is not found
+            sudo apt remove --yes docker docker-engine docker.io containerd runc
+            sudo apt update
+            sudo apt --yes --no-install-recommends install apt-transport-https ca-certificates
+            wget --quiet --output-document=- https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+            sudo add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable"
+            sudo apt update
+            sudo apt --yes --no-install-recommends install docker-ce docker-ce-cli containerd.io
+            sudo usermod --append --groups docker "$USER"
+            sudo systemctl enable docker
 
-        echo
-        echo "> Please log out and log in to complete the setup! Then rerun this script"
+            echo
+            echo "> Please log out and log in to complete the setup! Then rerun this script"
+        else
+            echo "   --Run Docker Desktop on Windows and rerun this script!"
+        fi
     else 
         echo "   --Installed."
     fi
@@ -138,6 +154,7 @@ services:
 EOF
 
 curl $COMPOSESNIPPETURL -s -o docker-compose.snippet
+sleep 1
 source docker-compose.snippet
 mainPORT=31234
 mainGqlPort=9331
@@ -202,10 +219,11 @@ checkSnapshot() {
     
     echo " -> Preparing volumes..."
     
-    if grep -q Microsoft /proc/version; then
+    if [ $PLATFORM = "WSL" ]; then
         echo "Ubuntu on Windows"
-        #TODO Verify docker volume location for WSL
-        #VOLUMES=/var/lib/docker/volumes/9c-swarm-miner_swarm-miner$((i))-volume/_data/
+        # Windows Explorer Location: \\wsl$\docker-desktop-data\version-pack-data\community\docker\volumes
+        # Access on Linux Side: Following https://github.com/microsoft/WSL/discussions/4176
+        # VOLUMES=/var/lib/docker/volumes/9c-swarm-miner_swarm-miner$((i))-volume/_data/
     else
         echo " Native Linux"
         VOLUMES=/var/lib/docker/volumes/9c-swarm-miner_swarm-miner$((i))-volume/_data/
@@ -221,30 +239,33 @@ checkSnapshot() {
 
 # Run: Docker
 runDocker() {
-    echo ">Starting Docker..."
-    echo ">>Please edit .settings.conf before running the dockers"
-    echo ">>Start Miners by running: docker-compose up -d "  
-    
-    docker-compose up -d
-
+    echo ">>Starting Docker..."
+    echo "->Please edit .settings.conf before running the dockers"
+    if [ -z "$NC_PRIVATE_KEY" ]; then
+        echo
+        echo ">>You must set your PRIVATE_KEY before autorun is enabled!" 
+    else
+        docker-compose up -d
+    fi
     echo
-    echo "   --Windows Monitor (Full Log): Goto Docker and you can access logging for each individual container."
-    echo "   --Windows Monitor (Mined Blocks Only): Search for Mined a block."
-    echo "   --Linux Monitor (Full Log): docker-compose logs --tail=100 -f"
-    echo "   --Linux Monitor (Mined Blocks Only): docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block"
-    echo "   --Linux Monitor (Mined/Reorg/Append failed events): docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a|reorged|Append failed'"
+    echo "-> Windows Monitor (Full Log): Goto Docker and you can access logging for each individual container."
+    echo "-> Windows Monitor (Mined Blocks Only): Search for Mined a block."
+    echo "-> Linux Monitor (Full Log): docker-compose logs --tail=100 -f"
+    echo "-> Linux Monitor (Mined Blocks Only): docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block"
+    echo "-> Linux Monitor (Mined/Reorg/Append failed events): docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a|reorged|Append failed'"
 }
 
 
 #############################################
 # Main
+checkPlatform
 checkPrereqs
 checkDocker
 checkCompose
 checkConfig
 checkComposeFile
 checkPerms
-#checkSnapshot
+checkSnapshot
 runDocker
 
 #############################################

@@ -223,8 +223,10 @@ checkSnapshot() {
 runDocker() {
     echo ">Starting Docker..."
     echo ">>Please edit .settings.conf before running the dockers"
-    echo ">>Start Miners by running: docker-compose up -d "
+    echo ">>Start Miners by running: docker-compose up -d "  
+    
     docker-compose up -d
+
     echo
     echo "   --Windows Monitor (Full Log): Goto Docker and you can access logging for each individual container."
     echo "   --Windows Monitor (Mined Blocks Only): Search for Mined a block."
@@ -244,6 +246,7 @@ checkComposeFile
 checkPerms
 #checkSnapshot
 runDocker
+
 #############################################
 # Debug
 if [ "$DEBUG" == "1" ]; then

@@ -1,22 +1,15 @@
 #!/bin/bash
 
-# Check: Updates for build params
-composeUpdate() {
-    rm -f docker-compose.yml
-    rm -f buildparams.txt
-
-    checkComposeFile
-}
-
+# Check Build Parameters from Online
 checkBuildParams() {
     CURRENT="buildparams.txt"
     NEW="new.buildparams.txt"
-    BUILDPARAMS="https://raw.githubusercontent.com/CryptoKasm/9c-swarm-miner/master/docker-compose.snippet"
+    BUILDPARAMS="https://raw.githubusercontent.com/CryptoKasm/9c-swarm-miner/New/buildparams.txt"
     
     curl $BUILDPARAMS -s -o $NEW
 
     if [ -f $CURRENT ]; then
-        echo "   --Found build params."
+        echo "   --Found buildparams.txt."
 
         #Check: Update
         if cmp -s $CURRENT $NEW; then
@@ -28,7 +21,7 @@ checkBuildParams() {
             rm -f docker-compose.yml
         fi
     else
-        echo "   --Creating file..."
+        echo "   --Downloading buildparams.txt..."
         cp $NEW $CURRENT
     fi
 
@@ -114,9 +107,20 @@ checkComposeFile() {
     if [ -f "docker-compose.yml" ]; then
         echo "   --Found file." 
     else
-        echo "   --Creating file..."
+        echo "   --Creating docker-compose.yml..."
         buildComposeFile
     fi
+}
+
+# Check: Updates for build params
+composeUpdate() {
+    echo "  Updating ------- docker-compose.yml"
+    echo "--------------------------------------------"
+
+    rm -f docker-compose.yml
+    rm -f buildparams.txt
+
+    checkComposeFile
 }
 
 #############################################

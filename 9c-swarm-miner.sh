@@ -11,10 +11,10 @@ echo "  Nine Chronicles - CryptoKasm Swarm Miner"
 echo "  Version: 1.3.1-alpha"
 echo "--------------------------------------------"
 
-if [ "$1" == "--Update" ]; then
+if [ "$1" == "--update" ]; then
     ./bin/docker-compose.sh --Update
     exit 0
-else
+elif [ "$1" == "--setup" ]; then
     # Check: Platform (Native Linux or WSL)
     checkPlatform() {
         if grep -q icrosoft /proc/version; then
@@ -37,7 +37,29 @@ else
 
     # Check: Snapshot
     #./bin/snapshot.sh --MakeSnapshot
-
+elif [ "$1" == "--help" ]; then
+    echo "> Usage: 9c-swarm-miner.sh [OPTION]"
+    echo "    --setup       Setup your system to use this script"
+    echo "    --update      Update docker-compose.yml"
+else
+    echo "> Starting Docker Stack..."
+    echo "  Please edit settings.conf before running the dockers"
+    if [ -z "$NC_PRIVATE_KEY" ]; then
+        echo
+        echo "> You must set your PRIVATE_KEY before autorun is enabled!" 
+    else
+        echo
+        echo "----------"
+        docker-compose up -d
+        echo "----------"
+    fi
+    echo
+    echo "  Windows Monitor (Full Log): Goto Docker and you can access logging for each individual container."
+    echo "  Windows Monitor (Mined Blocks Only): Search for Mined a block."
+    echo
+    echo "  Linux Monitor (Full Log): docker-compose logs --tail=100 -f"
+    echo "  Linux Monitor (Mined Blocks Only): docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block"
+    echo "  Linux Monitor (Mined/Reorg/Append failed events): docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a|reorged|Append failed'"
 fi
 
 #############################################

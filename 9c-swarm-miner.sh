@@ -35,8 +35,6 @@ elif [ "$1" == "--setup" ]; then
     # Check: docker-compose.yml
     ./bin/docker-compose.sh --MakeCompose
 
-    # Check: Snapshot
-    #./bin/snapshot.sh --MakeSnapshot
 elif [ "$1" == "--refresh" ]; then
     ./bin/snapshot.sh --RefreshSnapshot
 elif [ "$1" == "--help" ]; then
@@ -58,7 +56,7 @@ else
         echo "----------"
         if [ -f "docker-compose.yml" ]; then
             echo "Debug"
-            #docker-compose up -d 
+            docker-compose up -d 
         else
             echo "   --Run command before autorun enabled:"
             echo "                   ./9c-swarm-miner.sh --setup "

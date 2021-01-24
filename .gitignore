@@ -6,3 +6,9 @@ settings.conf
 
 # Ignore docker-compose.yml
 docker-compose.yml
+
+# Ignore Latest Snapshot
+latest-snapshot
+
+# Ignore Keystore
+keystore

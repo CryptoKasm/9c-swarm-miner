@@ -11,7 +11,7 @@ checkConfig() {
         cat > settings.conf << EOF
 # Nine Chronicles - CryptoKasm Swarm Miner
 
-# Turn on/off debugging for this script (1/0)
+# Turn on/off debugging for this script (1 ON/0 OFF)
 DEBUG=0
 
 # Set log level for all miners
@@ -31,6 +31,9 @@ NC_RAM_LIMIT=6144M
 
 # Set MIN RAM Per Miner **SAVES RESOURCES FOR THAT CONTAINER** 
 NC_RAM_RESERVE=2048M
+
+# Refresh Snapshot each run (NATIVE LINUX ONLY 4 NOW) (1 ON/0 OFF)
+NC_REFRESH_SNAPSHOT=0
 EOF
 
     fi

@@ -4,3 +4,5 @@ ck
 # Ignore .settings.conf
 settings.conf
 
+# Ignore docker-compose.yml
+docker-compose.yml

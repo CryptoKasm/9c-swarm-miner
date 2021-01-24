@@ -10,13 +10,13 @@
 <br>
 
 #
-### Quick Tip: 
+### Notes: 
 - **Linux Users: Please skip down to [Section 2](#Linux) to begin install.**
 - **Windows Users: MAKE SURE TO START DOCKER, before continuing to [Section 2](#Linux).**
 #
 <br>
 
-# Windows 10
+# Windows 10 (Skip, if already installed or Linux User)
 
 **Minimum System Requirements**
 - Windows 10, version 1903 or higher
@@ -70,7 +70,7 @@ powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.Cr
 1. Install: Git & Unzip
 1. Set Permissions
 1. Create Configuration File
-1. Create/Mange Snapshots
+1. Create/Refresh Snapshots
 1. Updater
 
 ## Usage
@@ -81,23 +81,27 @@ $ git clone https://github.com/CryptoKasm/9c-swarm-miner.git ~/9c-swarm-miner &&
 $ chmod +x 9c-swarm-miner.sh
 ```
 
-2. ***Run Script***
+2. ***Run Script with Setup Command***
 ```bash
-# First run, will setup system. Checks for updates each run
-$ sudo ./9c-swarm-miner.sh
+# This command will setup your system for this script. If you delete any configuration files or need to reconfigure, simply rerun this command.
+$ ./9c-swarm-miner.sh --setup
 ```
 
 3. ***Edit Configuration File***
 ```bash
-# Quick Download
-$ nano .settings.conf
+# Quick Edit
+$ nano settings.conf
 ```
 ```bash 
 # Example Configuration
 
 # Nine Chronicles - CryptoKasm Swarm Miner
 
+# Turn on/off debugging for this script (1 ON/0 OFF)
 DEBUG=0
+
+# Set log level for all miners
+LOG_LEVEL=debug
 
 # Nine Chronicles Private Key **KEEP SECRET**
 NC_PRIVATE_KEY=
@@ -109,10 +113,27 @@ NC_PUBLIC_KEY=
 NC_MINERS=1
 
 # Set MAX RAM Per Miner **PROTECTION FROM MEMORY LEAKS** 
-NC_RAM_LIMIT=4096M
+NC_RAM_LIMIT=6144M
 
 # Set MIN RAM Per Miner **SAVES RESOURCES FOR THAT CONTAINER** 
 NC_RAM_RESERVE=2048M
+
+# Refresh Snapshot each run (NATIVE LINUX ONLY 4 NOW) (1 ON/0 OFF)
+NC_REFRESH_SNAPSHOT=0
+```
+
+4. ***Run Script***
+```bash
+# After running the script with the --setup command you can run it like normal.
+./9c-swarm-miner.sh
+```
+
+```bash
+# Usage:
+./9c-swarm-miner.sh [OPTION] #Run normally, without options
+    --setup    #Installs prereqs for script
+    --update   #Checks for docker-compose.yml updates via github
+    --refresh  #Manually refresh snapshot (NATIVE LINUX ONLY)
 ```
 
 <br>

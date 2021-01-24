@@ -37,11 +37,17 @@ elif [ "$1" == "--setup" ]; then
 
     # Check: Snapshot
     #./bin/snapshot.sh --MakeSnapshot
+elif [ "$1" == "--refresh" ]; then
+    ./bin/snapshot.sh --RefreshSnapshot
 elif [ "$1" == "--help" ]; then
     echo "> Usage: 9c-swarm-miner.sh [OPTION]"
     echo "    --setup       Setup your system to use this script"
     echo "    --update      Update docker-compose.yml"
 else
+    if [ $NC_REFRESH_SNAPSHOT == "1" ]; then
+        ./bin/snapshot.sh --RefreshSnapshot
+    fi
+
     echo "> Starting Docker Stack..."
     echo "  Please edit settings.conf before running the dockers"
     if [ -z "$NC_PRIVATE_KEY" ]; then
@@ -50,7 +56,13 @@ else
     else
         echo
         echo "----------"
-        docker-compose up -d
+        if [ -f "docker-compose.yml" ]; then
+            echo "Debug"
+            #docker-compose up -d 
+        else
+            echo "   --Run command before autorun enabled:"
+            echo "                   ./9c-swarm-miner.sh --setup "
+        fi
         echo "----------"
     fi
     echo

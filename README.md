@@ -78,7 +78,6 @@ powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.Cr
 ```bash
 # Quick Download
 $ git clone https://github.com/CryptoKasm/9c-swarm-miner.git ~/9c-swarm-miner && cd 9c-swarm-miner
-$ chmod +x 9c-swarm-miner.sh
 ```
 
 2. ***Run Script with Setup Command***

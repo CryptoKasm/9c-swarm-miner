@@ -6,11 +6,6 @@ else
     echo "No configuration file..."
 fi
 
-# Check: Root Privileges
-if [ "$EUID" -ne 0 ]; then
-    echo "PLEASE RUN AS ROOT"
-    exit
-fi
 
 # Check: Platform (Native Linux or WSL)
 checkPlatform() {
@@ -98,9 +93,14 @@ checkPerms() {
     # TODO Set proper perms for files
     echo "> Setting Permissions"
     
-    if [ -f 9c-swarm-miner.sh ]; then chmod +xrw ./9c-swarm-miner.sh; else echo "   --9c-swarm-miner.sh not found"; fi
-    if [ -f docker-compose.yml ]; then chmod +rw ./docker-compose.yml; else echo "   --docker-compose.yml not found"; fi
+    if [ -f 9c-swarm-miner.sh ]; then chmod +xrw 9c-swarm-miner.sh; else echo "   --9c-swarm-miner.sh not found"; fi
+    if [ -f docker-compose.yml ]; then chmod +rw docker-compose.yml; else echo "   --docker-compose.yml not found"; fi
     if [ -f settings.conf ]; then chmod +rw settings.conf; else echo "   --settings.conf not found"; fi
+
+    if [ -f bin/build_config.sh ]; then chmod +rw bin/build_config.sh; else echo "   --build_config.sh not found"; fi
+    if [ -f bin/docker-compose.sh ]; then chmod +rw bin/docker-compose.sh; else echo "   --docker-compose.yml not found"; fi
+    if [ -f bin/snapshot.sh ]; then chmod +rw bin/snapshot.sh; else echo "   --snapshot.sh not found"; fi
+    if [ -f bin/system.sh ]; then chmod +rw bin/system.sh; else echo "   --system.sh not found"; fi
 }
 
 setupSystem() {

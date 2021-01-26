@@ -65,22 +65,26 @@ powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.Cr
 <br>
 
 **Script Tasks**
-1. Install: Docker
-1. Install: Compose
-1. Install: Git & Unzip
+1. Install: Dependencies
 1. Set Permissions
 1. Create Configuration File
 1. Create/Refresh Snapshots
 1. Updater
 
 ## Usage
-1. ***Clone Repository***
+1. ***Install Git***
 ```bash
 # Quick Download
-$ git clone https://github.com/CryptoKasm/9c-swarm-miner.git ~/9c-swarm-miner && cd 9c-swarm-miner
+$ sudo apt install -y git
 ```
 
-2. ***Run Script with Setup Command***
+2. ***Clone Repository***
+```bash
+# Quick Download
+$ git clone https://github.com/CryptoKasm/9c-swarm-miner.git ~/9c-swarm-miner && cd ~/9c-swarm-miner
+```
+
+3. ***Run Script with Setup Command***
 ```bash
 # This command will setup your system for this script. If you delete any configuration files or need to reconfigure, simply rerun this command.
 $ ./9c-swarm-miner.sh --setup

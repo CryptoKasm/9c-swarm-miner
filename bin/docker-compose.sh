@@ -52,7 +52,7 @@ EOF
         GQL_PORT=$((mainGqlPort++))
         cat <<EOF >>$COMPOSEFILE
   swarm-miner$i:
-    image: planetariumhq/ninechronicles-headless:git-81f6770a96ab0dda099535158cddf39b17574f6e
+    image: $DOCKERIMAGE
     mem_limit: $NC_RAM_LIMIT
     mem_reservation: $NC_RAM_RESERVE
     ports:

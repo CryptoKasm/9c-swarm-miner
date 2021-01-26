@@ -97,10 +97,11 @@ checkPerms() {
     if [ -f docker-compose.yml ]; then chmod +rw docker-compose.yml; else echo "   --docker-compose.yml not found"; fi
     if [ -f settings.conf ]; then chmod +rw settings.conf; else echo "   --settings.conf not found"; fi
 
-    if [ -f bin/build_config.sh ]; then chmod +rw bin/build_config.sh; else echo "   --build_config.sh not found"; fi
-    if [ -f bin/docker-compose.sh ]; then chmod +rw bin/docker-compose.sh; else echo "   --docker-compose.yml not found"; fi
-    if [ -f bin/snapshot.sh ]; then chmod +rw bin/snapshot.sh; else echo "   --snapshot.sh not found"; fi
-    if [ -f bin/system.sh ]; then chmod +rw bin/system.sh; else echo "   --system.sh not found"; fi
+    if [ -f bin/build_config.sh ]; then chmod +x bin/build_config.sh; else echo "   --build_config.sh not found"; fi
+    if [ -f bin/docker-compose.sh ]; then chmod +x bin/docker-compose.sh; else echo "   --docker-compose.yml not found"; fi
+    if [ -f bin/snapshot.sh ]; then chmod +x bin/snapshot.sh; else echo "   --snapshot.sh not found"; fi
+    if [ -f bin/system.sh ]; then chmod +x bin/system.sh; else echo "   --system.sh not found"; fi
+    if [ -f bin//usr/local/bin/docker-compose ]; then chmod +x /usr/local/bin/docker-compose; else echo "   --system.sh not found"; fi
 }
 
 setupSystem() {

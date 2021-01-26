@@ -4,7 +4,7 @@
 checkBuildParams() {
     CURRENT="buildparams.txt"
     NEW="new.buildparams.txt"
-    BUILDPARAMS="https://raw.githubusercontent.com/CryptoKasm/9c-swarm-miner/New/buildparams.txt"
+    BUILDPARAMS="https://raw.githubusercontent.com/CryptoKasm/9c-swarm-miner/master/buildparams.txt"
     
     curl $BUILDPARAMS -s -o $NEW
 

@@ -123,7 +123,10 @@ NC_REFRESH_SNAPSHOT=0
 
 4. ***Run Script***
 ```bash
-# After running the script with the --setup command you can run it like normal.
+# After editing settings.conf, you need to run the update command
+./9c-swarm-miner.sh --update
+
+# Now you can run it like normal.
 ./9c-swarm-miner.sh
 ```
 

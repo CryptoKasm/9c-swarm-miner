@@ -1,94 +1,104 @@
 #!/bin/bash
 
-if [ -f "settings.conf" ]; then
-    source settings.conf
-else
-    echo ">No configuration file..."
-    echo ">Defaulting to Setup"
-    FIRSTRUN=1
-fi
+Y="\e[93m"
+M="\e[95m"
+C="\e[96m"
+G="\e[92m"
+R="\e[0m"
 
-echo "--------------------------------------------"
-echo "  Nine Chronicles - CryptoKasm Swarm Miner"
-echo "  Version: 1.3.1-alpha"
-echo "--------------------------------------------"
+# Exit with reason
+error_exit()
+{
+  echo "$1" 1>&2
+  exit 1
+}
 
-if [ "$1" == "--update" ]; then
-    ./bin/docker-compose.sh --Update
-    exit 0
-elif [ "$1" == "--setup" ] || [ "$FIRSTRUN" == "1" ]; then
-    # Check: Platform (Native Linux or WSL)
-    checkPlatform() {
-        if grep -q icrosoft /proc/version; then
-            echo "> "
-            PLATFORM="WSL"
-        else
-            echo ">"
-            PLATFORM="NATIVE"
-        fi
-    }
-
-    # Build: Settings.conf
-    ./bin/build_config.sh --MakeConfig
-
-    # Check: Prereqs
-    sudo ./bin/system.sh --Setup
-
-    # Check: docker-compose.yml
-    ./bin/docker-compose.sh --MakeCompose
-
-    echo "> RUN SCRIPT AGAIN"
-elif [ "$1" == "--refresh" ]; then
-    ./bin/snapshot.sh --RefreshSnapshot
-elif [ "$1" == "--help" ]; then
-    echo "> Usage: 9c-swarm-miner.sh [OPTION]"
-    echo "    --setup       Setup your system to use this script"
-    echo "    --update      Update docker-compose.yml"
-    echo "    --refresh     Refresh snapshot (NATIVE LINUX ONLY)"
-else
-    if [ $NC_REFRESH_SNAPSHOT == "1" ]; then
-        ./bin/snapshot.sh --RefreshSnapshot
-    fi
-
-    echo "> Starting Docker Stack..."
-    echo "  Please edit settings.conf before running the dockers"
-    echo "> Run this command for options: "
-    echo "     ./9c-swarm-miner.sh --help "
-
-    if [ -z "$NC_PRIVATE_KEY" ]; then
-        echo
-        echo "> You must set your PRIVATE_KEY before autorun is enabled!"
-        echo "  Quick Command:  $ nano settings.conf" 
-        echo
-        echo "> RUN SCRIPT AGAIN"
+# Check: Platform (Native Linux or WSL)
+checkPlatform() {
+    if grep -q icrosoft /proc/version; then
+        PLATFORM="WSL"
     else
-        echo
-        echo "----------"
-        if [ -f "docker-compose.yml" ]; then
-            docker-compose up -d 
-        else
-            echo "   --Run command before docker can run:"
-            echo "                   ./9c-swarm-miner.sh --setup "
-        fi
-        echo "----------"
-        echo
-        echo "  Windows Monitor (Full Log): Goto Docker and you can access logging for each individual container."
-        echo "  Windows Monitor (Mined Blocks Only): Search for Mined a block."
-        echo
-        echo "  Linux Monitor (Full Log): "
-        echo "     docker-compose logs --tail=100 -f"
-        echo "  Linux Monitor (Mined Blocks Only): "
-        echo "     docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block'"
-        echo "  Linux Monitor (Mined/Reorg/Append failed events): "
-        echo "     docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a|reorged|Append failed'"
-        echo
+        PLATFORM="NATIVE"
     fi
-fi
+    echo $PLATFORM
+}
 
-#############################################
-# Main
+# Check: Run setup if first run
+checkFirstRun() {
+    if [ -f "settings.conf" ] || [ -f "docker-compose.yml" ]; then
+        return
+    else
+        ./bin/setup.sh
+    fi
+}
 
+# Check: settings.conf
+checkConfig() {
+    if [ -f "settings.conf" ]; then
+        echo -e "$C   -Importing:$R$G settings.conf$R"
+        source settings.conf
+    else
+        ./bin/build-config.sh
+    fi
+}
 
+# Check: docker-compose.yml
+checkCompose() {
+    if [ -f "docker-compose.yml" ]; then
+        echo -e "$C   -Importing:$R$G docker-compose.yml$R"
+        source settings.conf
+    else
+        ./bin/build-compose.sh
+    fi
+}
 
-#
-#############################################
+# Check: Snapshot
+checkSnapshot() {
+    if [[ "$NC_REFRESH_SNAPSHOT" == "1" ]]; then
+        ./bin/manage-snapshot.sh
+    else
+        echo -e "$M>Snapshot Management:$R$Y Disabled$R"
+    fi
+}
+
+# Precheck
+preCheck() {
+    echo -e "$M>Loading Prerequisites$R"
+    checkConfig
+    checkCompose
+}
+
+# Start Docker Containers
+startDocker() {
+    echo -e "$M>Starting Docker$R"
+    echo -e "$Y------------------$R"
+    docker-compose up -d 
+    echo -e "$Y-----------------------------------------------$R"
+    echo -e "$Y-Windows Monitor (Full Log): $R"
+    echo -e "$G    Goto Docker and you can access logging for each individual container $R"
+    echo -e "$Y-Windows Monitor (Mined Blocks Only): $R"
+    echo -e "$G    Search for Mined a block $R"
+    echo -e "$Y-Linux Monitor (Full Log): $R"
+    echo -e "$G    docker-compose logs --tail=100 -f $R"
+    echo -e "$Y-Linux Monitor (Mined Blocks Only): $R"
+    echo -e "$G    docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block' $R"
+    echo -e "$Y-Linux Monitor (Mined/Reorg/Append failed events): $R"
+    echo -e "$G    docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a|reorged|Append failed' $R"
+    echo -e "$Y-----------------------------------------------$R"
+
+}
+
+###############################
+Main() {
+    echo -e "$Y-----------------------------------------------$R"
+    echo -e "$Y>Nine Chronicles - Swarm Miner by CryptoKasm$R"
+    echo -e "$Y>Version:$R$G 1.4.1-alpha$R"
+    echo -e "$Y>Platform:$R$G $(checkPlatform)$R"
+    echo -e "$Y-----------------------------------------------$R"
+    checkFirstRun
+    preCheck
+    checkSnapshot
+    startDocker
+}
+###############################
+Main

@@ -1,7 +1,23 @@
 #!/bin/bash
 
-# Check Build Parameters from Online
-checkBuildParams() {
+Y="\e[93m"
+M="\e[95m"
+C="\e[96m"
+G="\e[92m"
+Re="\e[91m"
+R="\e[0m"
+RL="\e[1A\e["
+
+# Exit with reason
+error_exit()
+{
+  echo "$1" 1>&2
+  exit 1
+}
+
+# Update: Build Parameters from Online
+updateBuildParams() {
+    echo -e "$C   -Build Parameters:$R$Y Downloading...$R"
     CURRENT="buildparams.txt"
     NEW="new.buildparams.txt"
     BUILDPARAMS="https://raw.githubusercontent.com/CryptoKasm/9c-swarm-miner/master/buildparams.txt"
@@ -9,34 +25,22 @@ checkBuildParams() {
     curl $BUILDPARAMS -s -o $NEW
 
     if [ -f $CURRENT ]; then
-        echo "   --Found buildparams.txt."
-
         #Check: Update
         if cmp -s $CURRENT $NEW; then
-            echo "   ---No updates yet."
+            echo -e "$C   -Build Parameters:$R$G Current        $R"
         else
-            echo "   ---Found updates..."
-            rm $CURRENT
+            rm -f $CURRENT
             cp $NEW $CURRENT
             rm -f docker-compose.yml
         fi
     else
-        echo "   --Downloading buildparams.txt..."
-        cp $NEW $CURRENT
+         $NEW $CURRENT
     fi
-
-    echo "   --Cleaning temp file..."
-    rm -f $NEW
+    echo -e "$RL$C   -Build Parameters:$R$G Current        $R"
 }
 
 # Build: Compose File
 buildComposeFile() {
-    if [ -f "settings.conf" ]; then
-        source settings.conf
-    else
-        echo "No configuration file..."
-    fi
-
     COMPOSEFILE=docker-compose.yml
 
     cat <<EOF >$COMPOSEFILE
@@ -97,49 +101,37 @@ EOF
     done
 }
 
-# Check: Compose File
-checkComposeFile() {
-    echo "> Checking for docker-compose.yml"
+# Clean: Temp Files
+cleanTemp() {
+    echo -e "$C   -Cleaning temp files:$R$Y Processing...$R"
+    rm -f $NEW
+    echo -e "$RL$C   -Cleaning temp files:$R$G Done          $R"
+}
 
-    checkBuildParams
+###############################
+composeMain() {
+    echo -e "$M>Building Docker-Compose File$R"
+    
+    if [ -f "settings.conf" ]; then
+        source settings.conf
+    else
+        echo -e "$Re  -Run setup.sh before running this script!$R"
+        exit 1
+    fi
+
+    updateBuildParams
     source buildparams.txt
 
     if [ -f "docker-compose.yml" ]; then
-        echo "   --Found file." 
+        rm -f docker-compose.yml 
+        echo -e "$C   -Creating file:$R$G docker-compose.yml$R"
+        buildComposeFile
     else
-        echo "   --Creating docker-compose.yml..."
+        echo -e "$C   -Creating file:$R$G docker-compose.yml$R"
         buildComposeFile
     fi
+    cleanTemp
+    exit 0
 }
-
-# Check: Updates for build params
-composeUpdate() {
-    echo "  Updating ------- docker-compose.yml"
-    echo "--------------------------------------------"
-
-    rm -f docker-compose.yml
-    rm -f buildparams.txt
-
-    checkComposeFile
-}
-
-#############################################
-# Main
-
-if [ "$1" == "--MakeCompose" ]; then
-    checkComposeFile
-    exit 0
-fi
-
-if [ "$1" == "--CheckBuildParams" ]; then
-    checkBuildParams
-    exit 0
-fi
-
-if [ "$1" == "--Update" ]; then
-    composeUpdate
-    exit 0
-fi
-
-#
-#############################################
+###############################
+composeMain

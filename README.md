@@ -81,13 +81,14 @@ $ sudo apt install -y git
 2. ***Clone Repository***
 ```bash
 # Quick Download
-$ git clone https://github.com/CryptoKasm/9c-swarm-miner.git ~/9c-swarm-miner && cd ~/9c-swarm-miner
+$ git clone https://github.com/CryptoKasm/9c-swarm-miner.git ~/9c-swarm-miner && cd ~/9c-swarm-miner.sh
 ```
 
-3. ***Run Script with Setup Command***
+3. ***Run Script (twice)***
 ```bash
-# This command will setup your system for this script. If you delete any configuration files or need to reconfigure, simply rerun this command.
-$ ./9c-swarm-miner.sh --setup
+# First run will setup system, each run after that will execute like normal
+$ ./9c-swarm-miner.sh
+# Follow instuctions
 ```
 
 3. ***Edit Configuration File***
@@ -127,7 +128,7 @@ NC_REFRESH_SNAPSHOT=0
 
 4. ***Run Script***
 ```bash
-# After editing settings.conf, you need to run the update command
+# If you edited your settings.conf, you need to run the update command
 ./9c-swarm-miner.sh --update
 
 # Now you can run it like normal.
@@ -139,7 +140,9 @@ NC_REFRESH_SNAPSHOT=0
 ./9c-swarm-miner.sh [OPTION] #Run normally, without options
     --setup    #Installs prereqs for script
     --update   #Checks for docker-compose.yml updates via github
-    --refresh  #Manually refresh snapshot (NATIVE LINUX ONLY)
+    --refresh  #Refresh snapshot if older than 2hrs
+    --force-refresh #Force refresh snapshot
+    --clean    #Fresh Install (cleans downloaded/generated files)
 ```
 
 <br>

@@ -69,23 +69,20 @@ preCheck() {
     checkCompose
 }
 
+# Autostart: Logging Docker Containers
+autoLog() {
+    echo -e "$Y-----------------------------------------------$R"
+    echo -e "$Y>Docker Logging - Mined a block | reorged | Append failed$R"
+    docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a|reorged|Append failed'
+    echo -e "$Y-----------------------------------------------$R"
+}
+
 # Start Docker Containers
 startDocker() {
     echo -e "$M>Starting Docker$R"
     echo -e "$Y------------------$R"
     docker-compose up -d 
-    echo -e "$Y-----------------------------------------------$R"
-    echo -e "$Y-Windows Monitor (Full Log): $R"
-    echo -e "$G    Goto Docker and you can access logging for each individual container $R"
-    echo -e "$Y-Windows Monitor (Mined Blocks Only): $R"
-    echo -e "$G    Search for Mined a block $R"
-    echo -e "$Y-Linux Monitor (Full Log): $R"
-    echo -e "$G    docker-compose logs --tail=100 -f $R"
-    echo -e "$Y-Linux Monitor (Mined Blocks Only): $R"
-    echo -e "$G    docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block' $R"
-    echo -e "$Y-Linux Monitor (Mined/Reorg/Append failed events): $R"
-    echo -e "$G    docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a|reorged|Append failed' $R"
-    echo -e "$Y-----------------------------------------------$R"
+    autoLog
 
 }
 
@@ -100,6 +97,7 @@ Main() {
     preCheck
     checkSnapshot
     startDocker
+    docker-compo
 }
 ###############################
 if [ "$1" == "--setup" ]; then

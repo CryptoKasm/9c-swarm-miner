@@ -11,7 +11,7 @@ RDL="\e[4A\e["
 
 NC_SNAPDIR="latest-snapshot"
 NC_SNAPSHOT="$NC_SNAPDIR/9c-main"
-NC_SNAPZIP="$NC_SNAPDIR/9c-main-snapshot.zip"
+NC_SNAPZIP="9c-main-snapshot.zip"
 
 # Exit with reason
 error_exit()
@@ -81,6 +81,7 @@ refreshSnapshot() {
     if [ -d "$NC_SNAPSHOT" ]; then
         echo -e "$RL$C   -Searching for Snapshot:$R$G Found       $R"
         echo -e "$C   -Cleaning Local Snapshot:$R$Y Processing...$R"
+        rm -f $NC_SNAPZIP
         rm -rf latest-snapshot/* &> /dev/null
         echo -e "$RL$C   -Cleaning Local Snapshot:$R$G Done          $R"
     else
@@ -97,16 +98,16 @@ refreshSnapshot() {
     unzip 9c-main-snapshot.zip &> /dev/null
     echo -e "$RL$C   -Unzipping Snapshot:$R$G Done          $R"
 
-    rm 9c-main-snapshot.zip
+    mv 9c-main-snapshot.zip ../
 
     copyVolume
 }
 
 # Test: Refresh if older than 2 hrs
 testAge() {
-    if [ -d "$NC_SNAPSHOT" ]; then
+    if [ -d "$NC_SNAPSHOT" ] && [ -d "$NC_SNAPZIP" ]; then
         sudo chmod -R 700 $NC_SNAPSHOT
-        if [[ $(find $NC_SNAPZIP -type f -mmin +120) ]]; then
+        if [[ $(find $NC_SNAPZIP -type f +mmin +120) ]]; then
             refreshSnapshot
         else
             echo -e "$C   -Snapshot:$R$Y Current! (Force refresh with -f flag)$R"

@@ -56,21 +56,12 @@ checkBuildParams() {
 copyVolume(){
     echo -e "$M>Preparing Volumes on Platform$R"
     
-    if [ $(checkPlatform) = "WSL" ]; then
-        echo -e "$Y   -WSL$R"
-        # Windows Explorer Location: \\wsl$\docker-desktop-data\version-pack-data\community\docker\volumes
-        # Access on Linux Side: Following https://github.com/microsoft/WSL/discussions/4176
-        # VOLUMES=/var/lib/docker/volumes/9c-swarm-miner_swarm-miner$((i))-volume/_data/
-    else
-        VOLUMES=/var/lib/docker/volumes/9c-swarm-miner_swarm-miner$((i))-volume/_data/
-
-        for ((i=1; i<=$NC_MINERS; i++)); do
-        echo -e "$C   -Volume>$R$M swarm-miner$i-volume$R:$G Copying...$R"
+    for ((i=1; i<=$NC_MINERS; i++)); do
+        echo -e "$C   -Volume>$R$M 9c-swarm-miner_swarm-miner$((i))_1:$R$G Copying...$R"
         # NOTE: The location and the name of the docker volumes may differ, depending on the system.
-        sudo cp -r ./* $VOLUMES
-        echo -e "$RL$C   -Volume>$R$M swarm-miner$i-volume$R:$G Done       $R"
-        done
-    fi
+        sudo docker cp . 9c-swarm-miner_swarm-miner$((i))_1:/app/data/
+        echo -e "$RL$C   -Volume>$R$M 9c-swarm-miner_swarm-miner$((i))_1:$R$G Done       $R"
+    done
 }
 
 # Refresh: Snapshot
@@ -106,6 +97,9 @@ refreshSnapshot() {
     unzip 9c-main-snapshot.zip &> /dev/null
     echo -e "$RL$C   -Unzipping Snapshot:$R$G Done          $R"
 
+    rm 9c-main-snapshot.zip
+
+    copyVolume
 }
 
 # Test: Refresh if older than 2 hrs
@@ -128,8 +122,6 @@ forceRefresh() {
     checkConfig
     checkBuildParams
     refreshSnapshot
-    copyVolume
-    echo -e "$M>Snapshot Refreshed!$R"
 }
 
 ###############################
@@ -139,9 +131,6 @@ snapshotMain() {
     checkConfig
     checkBuildParams
     testAge
-    copyVolume
-
-    echo -e "$M>Snapshot Refreshed!$R"
 }
 ###############################
 if [ "$1" == "--force" ]; then

@@ -64,12 +64,15 @@ installDocker() {
             sudo usermod --append --groups docker "$USER"
             sudo systemctl enable docker
             } &> /dev/null
+            RESTART=1
         else
             echo -e "$C  -Docker:$R$Re Make sure to run Docker Desktop on Windows 10!"$R
+            RESTART=0
             
         fi
     else 
         echo -e "$RL$C  -Docker:$R$G Installed     $R"
+        RESTART=0
     fi
 }
 
@@ -111,15 +114,18 @@ checkPerms() {
 
 ###############################
 setupMain() {
-    echo -e "$M>Initiating Setup for (WSL or Native)$R"
+    echo -e "$M>Initiating Setup for $(checkPlatform)$R"
     installCurl
     installUnzip
     installDocker
     installCompose
     checkPerms
     
-    echo -e "$Re>Please log out and log in to complete the setup for Docker! Then re-run this script"$R
-    echo
+    if [[ "$RESTART" == 1 ]]; then
+        echo -e "$Re>Please log out and log in to complete the setup for Docker! Then re-run this script"$R
+        echo
+    fi
+
 }
 ###############################
 if [ "$1" == "--perms" ]; then

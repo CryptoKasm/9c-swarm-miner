@@ -29,6 +29,8 @@ checkFirstRun() {
         return
     else
         ./bin/setup.sh
+        echo -e "$Re>Please log out and log in to complete the setup for Docker! Then re-run this script"$R
+        echo
     fi
 }
 

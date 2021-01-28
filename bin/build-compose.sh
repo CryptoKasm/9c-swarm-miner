@@ -50,7 +50,7 @@ services:
 EOF
 
     mainPORT=31234
-    mainGqlPort=9331
+    mainGqlPort=23061
     for ((i=1; i<=$NC_MINERS; i++)); do
         PORT=$((mainPORT++))
         GQL_PORT=$((mainGqlPort++))
@@ -61,7 +61,7 @@ EOF
     mem_reservation: $NC_RAM_RESERVE
     ports:
       - "$PORT:31234"
-      - "127.0.0.1:$GQL_PORT:23061"
+      - "$GQL_PORT:23061"
     volumes:
       - swarm-miner$i-volume:/app/data
       - ./keystore:/app/planetarium/keystore

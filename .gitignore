@@ -12,3 +12,6 @@ latest-snapshot
 
 # Ignore Keystore
 keystore
+
+# Ignore Snapshot Zip
+9c-main-snapshot.zip

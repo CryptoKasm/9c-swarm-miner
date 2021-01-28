@@ -86,8 +86,8 @@ installCompose() {
 
     if ! [ -x "$(command -v docker-compose)" ]; then
         echo -e "$C  -Docker-Compose:$R$G Installing...$R"
-        curl -L https://github.com/docker/compose/releases/download/$(compose_release)/docker-compose-$(uname -s)-$(uname -m) \
-        -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+        sudo curl -L https://github.com/docker/compose/releases/download/$(compose_release)/docker-compose-$(uname -s)-$(uname -m) \
+        -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose
 
         echo -e "$RL$C  -Docker-Compose:$R$G Installed     $R"
     else 
@@ -107,7 +107,7 @@ checkPerms() {
     if [ -f build-compose.sh ]; then chmod +xrw build-compose.sh; fi
     if [ -f manage-snapshot.sh ]; then chmod +x manage-snapshot.sh; fi
     if [ -f bin/setup.sh ]; then chmod +x bin/setup.sh; fi
-    if [ -f bin//usr/local/bin/docker-compose ]; then chmod +x /usr/local/bin/docker-compose; fi
+    if [ -f bin//usr/local/bin/docker-compose ]; then sudo chmod +x /usr/local/bin/docker-compose; fi
 
     echo -e "$RL$C  -Permissions:$R$G Set       $R"
 }

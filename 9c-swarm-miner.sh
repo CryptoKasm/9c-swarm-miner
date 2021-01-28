@@ -99,7 +99,6 @@ Main() {
     preCheck
     checkSnapshot
     startDocker
-    docker-compo
 }
 ###############################
 if [ "$1" == "--setup" ]; then

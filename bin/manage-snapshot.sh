@@ -60,7 +60,7 @@ copyVolume(){
         echo -e "$C   -Volume>$R$M 9c-swarm-miner_swarm-miner$((i))_1:$R$G Copying...$R"
         # NOTE: The location and the name of the docker volumes may differ, depending on the system.
         sudo docker cp . 9c-swarm-miner_swarm-miner$((i))_1:/app/data/
-        echo -e "$RL$C   -Volume>$R$M 9c-swarm-miner_swarm-miner$((i))_1:$R$G Done       $R"
+        echo -e "$RL2$C   -Volume>$R$M 9c-swarm-miner_swarm-miner$((i))_1:$R$G Done       $R"
     done
 }
 

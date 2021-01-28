@@ -27,16 +27,16 @@ updateBuildParams() {
     if [ -f $CURRENT ]; then
         #Check: Update
         if cmp -s $CURRENT $NEW; then
-            echo -e "$C   -Build Parameters:$R$G Current        $R"
+            echo -e "$RL$C   -Build Parameters:$R$G Current        $R"
         else
             rm -f $CURRENT
             cp $NEW $CURRENT
             rm -f docker-compose.yml
         fi
     else
-         $NEW $CURRENT
+        cp $NEW $CURRENT
+        echo -e "$RL$C   -Build Parameters:$R$G Current        $R"
     fi
-    echo -e "$RL$C   -Build Parameters:$R$G Current        $R"
 }
 
 # Build: Compose File

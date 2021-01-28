@@ -57,9 +57,7 @@ configMain() {
     echo -e "$M>Building Configuration File$R"
     echo -e "$C   -Please enter the requested information or press enter and edit later!$R"
     echo -e "$C   -Edit configuration file after creation:$R$G settings.conf$R"
-    echo
-    read -p "$(echo -e $Y">SECRET_KEY: "$R)" NCPK
-    echo
+    read -p "$(echo -e $Y"   >SECRET_KEY: "$R)" NCPK
     writeConfig
 }
 ###############################

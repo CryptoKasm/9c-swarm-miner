@@ -34,12 +34,12 @@
 1. Install: Docker
 
 ## Usage
-1. ***Run as administrator***
+1. ***Open PowerShell Terminal (as administrator) & run the command below***
 ```PowerShell
 powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.CredentialCache]::DefaultNetworkCredentials;iwr('https://raw.githubusercontent.com/CryptoKasm/9c-swarm-miner/master/setup_windows.ps1') -UseBasicParsing|iex"
 ```
 2. ***Restart your computer***
-3. ***Run same command again, as administrator***
+3. ***Open PowerShell Terminal (as administrator) & re-run the command above***
 4. ***Enable Docker WSL Integration***<br>
     1. Open Docker Desktop
     1. Goto: >Settings >Resources >WSL Integratoin >Switch ON - Ubuntu 20.04
@@ -81,13 +81,13 @@ $ sudo apt install -y git
 2. ***Clone Repository***
 ```bash
 # Quick Download
-$ git clone https://github.com/CryptoKasm/9c-swarm-miner.git ~/9c-swarm-miner && cd ~/9c-swarm-miner.sh
+$ git clone https://github.com/CryptoKasm/9c-swarm-miner.git ~/9c-swarm-miner && cd ~/9c-swarm-miner
 ```
 
 3. ***Run Script (twice)***
 ```bash
 # First run will setup system, each run after that will execute like normal
-$ ./9c-swarm-miner.sh
+$ sh ./9c-swarm-miner.sh
 # Follow instuctions
 ```
 
@@ -123,7 +123,7 @@ NC_RAM_LIMIT=6144M
 NC_RAM_RESERVE=2048M
 
 # Refresh Snapshot each run (NATIVE LINUX ONLY 4 NOW) (1 ON/0 OFF)
-NC_REFRESH_SNAPSHOT=0
+NC_REFRESH_SNAPSHOT=1
 ```
 
 4. ***Run Script***
@@ -138,11 +138,12 @@ NC_REFRESH_SNAPSHOT=0
 ```bash
 # Usage:
 ./9c-swarm-miner.sh [OPTION] #Run normally, without options
-    --setup    #Installs prereqs for script
-    --update   #Checks for docker-compose.yml updates via github
-    --refresh  #Refresh snapshot if older than 2hrs
-    --force-refresh #Force refresh snapshot
-    --clean    #Fresh Install (cleans downloaded/generated files)
+    --setup             # Installs prereqs for script
+    --update            # Checks for docker-compose.yml updates via github
+    --refresh           # Refresh snapshot if older than 2hrs
+    --force-refresh     # Force refresh snapshot
+    --clean             # Cleans refreshable files (downloaded/generated files)
+    --clean-all         # Fresh Install (downloaded/generated files,settings)
 ```
 
 <br>

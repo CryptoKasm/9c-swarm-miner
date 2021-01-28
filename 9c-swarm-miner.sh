@@ -54,7 +54,7 @@ checkCompose() {
 
 # Check: Snapshot
 checkSnapshot() {
-    if [[ "$NC_REFRESH_SNAPSHOT" == 1 ]] && [ $(checkPlatform) = "NATIVE" ]; then
+    if [[ "$NC_REFRESH_SNAPSHOT" == 1 ]]; then
         ./bin/manage-snapshot.sh
         #TODO Need to test on Native Linux before official release
     else
@@ -112,6 +112,9 @@ elif [ "$1" == "--refresh" ]; then
 elif [ "$1" == "--force-refresh" ]; then
     ./bin/manage-snapshot.sh --force
 elif [ "$1" == "--clean" ]; then
+    rm -r docker-compose.yml
+    rm -rf latest-snapshot
+elif [ "$1" == "--clean-all" ]; then
     rm -r docker-compose.yml
     rm -f settings.conf
     rm -rf latest-snapshot

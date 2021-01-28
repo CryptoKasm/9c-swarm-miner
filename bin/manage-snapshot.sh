@@ -105,14 +105,15 @@ refreshSnapshot() {
 
 # Test: Refresh if older than 2 hrs
 testAge() {
-    if [ -d "$NC_SNAPSHOT" ] && [ -d "$NC_SNAPZIP" ]; then
+    if [ -d "$NC_SNAPSHOT" ] && [ -f "$NC_SNAPZIP" ]; then
         sudo chmod -R 700 $NC_SNAPSHOT
-        if [[ $(find $NC_SNAPZIP -type f +mmin +120) ]]; then
+        if [[ $(find "9c-main-snapshot.zip" -type f -mmin +120) ]]; then
             refreshSnapshot
         else
             echo -e "$C   -Snapshot:$R$Y Current! (Force refresh with -f flag)$R"
         fi
     else
+        echo "test"
         refreshSnapshot
     fi
 }

@@ -1,24 +1,14 @@
 #!/bin/bash
+source bin/consoleStyle.sh
 
-Y="\e[93m"
-M="\e[95m"
-C="\e[96m"
-G="\e[92m"
-Re="\e[91m"
-R="\e[0m"
-RL="\e[1A\e["
-RDL="\e[4A\e["
+# Test: Root Privileges
+if [ "$EUID" -ne 0 ]; then
+    sudo echo ""
+fi
 
 NC_SNAPDIR="latest-snapshot"
 NC_SNAPSHOT="$NC_SNAPDIR/9c-main"
 NC_SNAPZIP="9c-main-snapshot.zip"
-
-# Exit with reason
-error_exit()
-{
-  echo "$1" 1>&2
-  exit 1
-}
 
 # Check: Platform (Native Linux or WSL)
 checkPlatform() {
@@ -33,10 +23,9 @@ checkPlatform() {
 # Check: Settings.conf
 checkConfig() {
     if [ -f "settings.conf" ]; then
-        echo -e "$C   -Importing:$R$G settings.conf$R"
         source settings.conf
     else
-        echo -e "$Re  -Run setup.sh before running this script!$R"
+        echo -e $P">$sB Please run setup! Then re-run this script"$RS
         exit 1
     fi
 }
@@ -44,62 +33,55 @@ checkConfig() {
 # Check: buildparams.txt
 checkBuildParams() {
     if [ -f "buildparams.txt" ]; then
-        echo -e "$C   -Importing:$R$G buildparams.txt$R"
         source buildparams.txt
     else
-        echo -e "$Re  -Run setup.sh before running this script!$R"
+        echo -e $P">$sB Please run setup! Then re-run this script"$RS
         exit 1
     fi
 }
 
 # Copy: Snapshot to Volumes
 copyVolume(){
-    echo -e "$M>Preparing Volumes on Platform$R"
+    consoleTitle "Preparing Volumes on Platform"
     
     for ((i=1; i<=$NC_MINERS; i++)); do
-        echo -e "$C   -Volume>$R$M 9c-swarm-miner_swarm-miner$((i))_1:$R$G Copying...$R"
+        echo -ne $S"|$RS Miner$((i))_1       $S|$C Copying...     $S|$C $(prog "1")\r"
         # NOTE: The location and the name of the docker volumes may differ, depending on the system.
         sudo docker cp . 9c-swarm-miner_swarm-miner$((i))_1:/app/data/
-        echo -e "$RL2$C   -Volume>$R$M 9c-swarm-miner_swarm-miner$((i))_1:$R$G Done       $R"
+        echo -e $S"|$RS Miner$((i))_1       $S|$C Ready          $S|$C $(prog "10")"
     done
 }
 
 # Refresh: Snapshot
 refreshSnapshot() {
-    echo -e "$M>Refreshing Snapshot$R"
+    consoleTitle "Refreshing Snapshot"
 
-    echo -e "$C   -Cleaning Docker Environment:$R$Y Processing...$R"
+    consoleEntry "8" "11" "1" "1"
     {
     docker-compose down -v --remove-orphans     # Stops & deletes environment **snapshot**
     docker-compose up -d        # Restarts to recreate clean environment
     docker-compose stop         # Stops cleaned environment for snapshot update
     } &> /dev/null
-    echo -e "$RL$C   -Cleaning Docker Environment:$R$G Done          $R"
-
-    echo -e "$C   -Searching for Snapshot:$R$Y Checking...$R"
-
+    consoleEntry "8" "12" "10" "0"
+    
     if [ -d "$NC_SNAPSHOT" ]; then
-        echo -e "$RL$C   -Searching for Snapshot:$R$G Found       $R"
-        echo -e "$C   -Cleaning Local Snapshot:$R$Y Processing...$R"
+        consoleEntry "9" "11" "1" "1"
         rm -f $NC_SNAPZIP
         rm -rf latest-snapshot/* &> /dev/null
-        echo -e "$RL$C   -Cleaning Local Snapshot:$R$G Done          $R"
+        consoleEntry "9" "12" "10" "0"
     else
-        echo -e "$RL$C   -Searching for Snapshot:$R$Y Not Found   $R"
         mkdir -p latest-snapshot &> /dev/null
     fi
 
-    echo -e "$C   -New Snapshot:$R$Y Downloading...$R"
+    consoleEntry "10" "5" "1" "1"
     cd latest-snapshot
+    consoleEntry "10" "5" "3" "1"
     curl -O $SNAPSHOT
-    echo -e "$C   -New Snapshot:$R$G Done           $R"
-    
-    echo -e "$C   -Unzipping Snapshot:$R$Y Processing...$R"
+    consoleEntry "10" "14" "5" "3"
     unzip 9c-main-snapshot.zip &> /dev/null
-    echo -e "$RL$C   -Unzipping Snapshot:$R$G Done          $R"
-
+    consoleEntry "10" "15" "8" "1"
     mv 9c-main-snapshot.zip ../
-
+    consoleEntry "10" "16" "10" "0"
     copyVolume
 }
 
@@ -110,26 +92,26 @@ testAge() {
         if [[ $(find "9c-main-snapshot.zip" -type f -mmin +120) ]]; then
             refreshSnapshot
         else
-            echo -e "$C   -Snapshot:$R$Y Current! (Force refresh with -f flag)$R"
+            consoleEntry "9" "13" "0" "0"
         fi
     else
-        echo "test"
         refreshSnapshot
     fi
 }
 
 forceRefresh() {
-    echo -e "$M>Snapshot Management: $(checkPlatform)$R"
-
+    echo -e $P"-----------------------------------------------"$RS
+    consoleTitle "Snapshot Management: $(checkPlatform)"
     checkConfig
     checkBuildParams
     refreshSnapshot
+    echo
+    echo -e $P"-----------------------------------------------"$RS
 }
 
 ###############################
 snapshotMain() {
-    echo -e "$M>Snapshot Management: $(checkPlatform)$R"
-    
+    consoleTitle "Snapshot Management: $(checkPlatform)"
     checkConfig
     checkBuildParams
     testAge

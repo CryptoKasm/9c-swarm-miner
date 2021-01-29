@@ -1,23 +1,9 @@
 #!/bin/bash
-
-Y="\e[93m"
-M="\e[95m"
-C="\e[96m"
-G="\e[92m"
-Re="\e[91m"
-R="\e[0m"
-RL="\e[1A\e["
-
-# Exit with reason
-error_exit()
-{
-  echo "$1" 1>&2
-  exit 1
-}
+source bin/consoleStyle.sh
 
 # Write: settings.conf
 writeConfig() {
-    echo -e "$C   -Creating file:$R$G settings.conf$R"
+    consoleEntry "6" "4" "1" "1"
     if [ -f "settings.conf" ]; then
         echo "   --File Found: settings.conf" 
     else
@@ -50,14 +36,17 @@ NC_REFRESH_SNAPSHOT=1
 EOF
 
     fi
+
 }
 
 ###############################
 configMain() {
-    echo -e "$M>Building Configuration File$R"
-    echo -e "$C   -Please enter the requested information or press enter and edit later!$R"
-    echo -e "$C   -Edit configuration file after creation:$R$G settings.conf$R"
-    read -p "$(echo -e $Y"   >SECRET_KEY: "$R)" NCPK
+    #consoleTitle "Building Configuration File"
+    echo -e " | Please enter the requested information or press enter and edit later!"
+    echo -e " | Edit configuration file after creation:$RS settings.conf"
+    echo
+    read -p "$(echo -e $P">$sB SECRET_KEY: "$RS)" NCPK
+    echo
     writeConfig
 }
 ###############################

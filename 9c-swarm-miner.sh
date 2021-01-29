@@ -1,17 +1,10 @@
 #!/bin/bash
+source bin/consoleStyle.sh
 
-Y="\e[93m"
-M="\e[95m"
-C="\e[96m"
-G="\e[92m"
-R="\e[0m"
-
-# Exit with reason
-error_exit()
-{
-  echo "$1" 1>&2
-  exit 1
-}
+# Test: Root Privileges
+if [ "$EUID" -ne 0 ]; then
+    sudo echo ""
+fi
 
 # Check: Platform (Native Linux or WSL)
 checkPlatform() {
@@ -23,21 +16,31 @@ checkPlatform() {
     echo $PLATFORM
 }
 
+# Exits script from function
+endScript() {
+    exit 0
+}
+
 # Check: Run setup if first run
 checkFirstRun() {
     if [ -f "settings.conf" ] || [ -f "docker-compose.yml" ]; then
         return
     else
         ./bin/setup.sh
-        echo -e "$Re>Please log out and log in to complete the setup for Docker! Then re-run this script"$R
         echo
+        checkConfig
+        checkCompose
+        echo
+        echo -e $P">$sB If Docker was installed, log out and log in to complete the setup! Then re-run this script!"$RS
+        echo
+        #endScript
     fi
 }
 
 # Check: settings.conf
 checkConfig() {
     if [ -f "settings.conf" ]; then
-        echo -e "$C   -Importing:$R$G settings.conf$R"
+        consoleEntry "6" "4" "0" "0"
         source settings.conf
     else
         ./bin/build-config.sh
@@ -47,7 +50,7 @@ checkConfig() {
 # Check: docker-compose.yml
 checkCompose() {
     if [ -f "docker-compose.yml" ]; then
-        echo -e "$C   -Importing:$R$G docker-compose.yml$R"
+        consoleEntry "7" "4" "0" "0"
         source settings.conf
     else
         ./bin/build-compose.sh
@@ -56,49 +59,61 @@ checkCompose() {
 
 # Check: Snapshot
 checkSnapshot() {
+    echo -e $P"-----------------------------------------------"$RS
     if [[ "$NC_REFRESH_SNAPSHOT" == 1 ]]; then
         ./bin/manage-snapshot.sh
-        #TODO Need to test on Native Linux before official release
     else
-        echo -e "$M>Snapshot Management:$R$Y Disabled$R"
+        consoleTitle "Snapshot Management:$F Disabled$RS"
     fi
 }
 
 # Precheck
 preCheck() {
-    echo -e "$M>Loading Prerequisites$R"
+    consoleTitle "Loading Prerequisites"
     checkConfig
     checkCompose
 }
 
 # Autostart: Logging Docker Containers
 autoLog() {
-    echo -e "$Y-----------------------------------------------$R"
-    echo -e "$Y>Docker Logging - Mined a block | reorged | Append failed$R"
-    docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a|reorged|Append failed'
-    echo -e "$Y-----------------------------------------------$R"
+    export GREP_COLORS='ms=1;92'
+    echo -e $P"-----------------------------------------------"$RS
+    consoleTitle "Docker Logging - Mined a block | reorged | Append failed"
+    docker-compose logs --tail=1000 -f | grep --color -i -E 'Mined a block|reorged|Append failed'
+}
+
+# Display Log Commands
+displayLogCmds() {
+    echo -e $P"-----------------------------------------------"$RS
+    consoleTitle "Windows Monitor (Full Log):"
+    echo -e "    Open Docker and you can access logging for each individual container"
+    consoleTitle "Windows Monitor (Mined Blocks Only):"
+    echo -e "    Search for Mined a block"
+    consoleTitle "Linux Monitor (Full Log):"
+    echo -e "    docker-compose logs --tail=100 -f"
+    consoleTitle "Linux Monitor (Mined Blocks Only):"
+    echo -e "    docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block'"
+    consoleTitle "Linux Monitor (Mined/Reorg/Append failed events):"
+    echo -e "    docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a block|reorged|Append failed'"
 }
 
 # Start Docker Containers
 startDocker() {
-    echo -e "$M>Starting Docker$R"
-    echo -e "$Y------------------$R"
-    docker-compose up -d 
-    autoLog
-
+    echo -e $P"-----------------------------------------------"$RS
+    consoleTitle "Starting Docker"
+    #docker-compose up -d 
+    
 }
 
 ###############################
 Main() {
-    echo -e "$Y-----------------------------------------------$R"
-    echo -e "$Y>Nine Chronicles - Swarm Miner by CryptoKasm$R"
-    echo -e "$Y>Version:$R$G 1.4.1-alpha$R"
-    echo -e "$Y>Platform:$R$G $(checkPlatform)$R"
-    echo -e "$Y-----------------------------------------------$R"
+    consoleIntro
     checkFirstRun
     preCheck
     checkSnapshot
     startDocker
+    displayLogCmds
+    autoLog
 }
 ###############################
 if [ "$1" == "--setup" ]; then

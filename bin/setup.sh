@@ -1,20 +1,10 @@
 #!/bin/bash
+source bin/consoleStyle.sh
 
-Y="\e[93m"
-M="\e[95m"
-C="\e[96m"
-G="\e[92m"
-Re="\e[91m"
-R="\e[0m"
-RL="\e[1A\e["
-RL2="\e[1A\e["
-
-# Exit with reason
-error_exit()
-{
-  echo "$1" 1>&2
-  exit 1
-}
+# Test: Root Privileges
+if [ "$EUID" -ne 0 ]; then
+    sudo echo ""
+fi
 
 # Check: Platform (Native Linux or WSL)
 checkPlatform() {
@@ -28,53 +18,82 @@ checkPlatform() {
 
 # Install: Curl
 installCurl() {
+    consoleEntry "3" "1" "1" "1"
     if ! [ -x "$(command -v curl)" ]; then
-        echo -e "$C  -Curl:$R$Y Installing...$R"
+        consoleEntry "3" "1" "3" "1"
         sudo apt install curl -y &> /dev/null
-        echo -e "$RL$C  -Curl:$R$G Installed     $R"
+        consoleEntry "3" "1" "8" "1"
+
+        if [ -x "$(command -v curl)" ]; then 
+            consoleEntry "3" "2" "10" "0"
+        else 
+            errCode "Can't install 'Curl'" 
+        fi
     else 
-        echo -e "$C  -Curl:$R$G Installed$R"
+        consoleEntry "3" "2" "10" "0"
     fi
 }
 
 # Install: Unzip
 installUnzip() {
+    consoleEntry "4" "1" "1" "1"
     if ! [ -x "$(command -v unzip)" ]; then
-        echo -e "$C  -Unzip:$R$Y Installing...$R"
+        consoleEntry "4" "1" "3" "1"
         sudo apt install unzip -y &> /dev/null
-        echo -e "$RL$C  -Curl:$R$G Installed     $R"
+        consoleEntry "4" "2" "8" "0"
+
+        if [ -x "$(command -v unzip)" ]; then 
+            consoleEntry "4" "2" "10" "0"
+        else 
+            errCode "Can't install 'Unzip'" 
+        fi
     else 
-        echo -e "$C  -Unzip:$R$G Installed$R"
+        consoleEntry "4" "2" "10" "0"
     fi
 }
 
 # Install: Docker
 installDocker() {
+    # TODO: Test on Dev Machine where I can freely uninstall/reinstall docker.
+    consoleEntry "1" "1" "1" "1"
     if ! [ -x "$(command -v docker)" ]; then
         if [ $(checkPlatform) = "NATIVE" ]; then
-            echo -e "$C  -Docker:$R$Y Installing...$R"
+            consoleEntry "1" "2" "3" "1"
             # Removing leftovers if Docker is not found
             {
             sudo apt remove --yes docker docker-engine docker.io containerd runc
             sudo apt update
             sudo apt --yes --no-install-recommends install apt-transport-https ca-certificates
+            } &> /dev/null
+            consoleEntry "1" "1" "5" "1"
+            {
             wget --quiet --output-document=- https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
             sudo add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable"
             sudo apt update
+            } &> /dev/null
+            consoleEntry "1" "1" "8" "1"
+            {
             sudo apt --yes --no-install-recommends install docker-ce docker-ce-cli containerd.io
             sudo usermod --append --groups docker "$USER"
             sudo systemctl enable docker
             } &> /dev/null
+
+            if [ -x "$(command -v unzip)" ]; then 
+                consoleEntry "1" "2" "10" "0"
+            else 
+                errCode "Can't install 'Docker'" 
+            fi
         else
-            echo -e "$C  -Docker:$R$Re Make sure to run Docker Desktop on Windows 10!"$R           
+            consoleEntry "1" "7" "9" "0"          
         fi
     else 
-        echo -e "$RL2$C  -Docker:$R$G Installed     $R"
+        consoleEntry "1" "2" "10" "0"
     fi
 }
 
 # Install: Docker-Compose
 installCompose() {
+    consoleEntry "2" "1" "1" "1"
     # Get: Compose Latest Version
     compose_release() {
         curl --silent "https://api.github.com/repos/docker/compose/releases/latest" |
@@ -82,36 +101,45 @@ installCompose() {
     }
 
     if ! [ -x "$(command -v docker-compose)" ]; then
-        echo -e "$C  -Docker-Compose:$R$G Installing...$R"
+        consoleEntry "2" "1" "3" "1"
         sudo curl -L https://github.com/docker/compose/releases/download/$(compose_release)/docker-compose-$(uname -s)-$(uname -m) \
         -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose
-
-        echo -e "$RL$C  -Docker-Compose:$R$G Installed     $R"
+        consoleEntry "2" "1" "8" "1"
+        
+        if [ -x "$(command -v unzip)" ]; then 
+            consoleEntry "2" "2" "10" "0"
+        else 
+            errCode "Can't install 'Docker-Compose'" 
+        fi
     else 
-        echo -e "$C  -Docker-Compose:$R$G Installed     $R"
+        consoleEntry "2" "2" "10" "0"
     fi
 }
 
 # Check: Permissions
 checkPerms() {
-    echo -e "$C  -Permissions:$R$Y Setting...$R"
-    
+    consoleEntry "5" "8" "1" "1"
     if [ -f 9c-swarm-miner.sh ]; then chmod +xrw 9c-swarm-miner.sh; fi
+    consoleEntry "5" "8" "2" "1"
     if [ -f docker-compose.yml ]; then chmod +rw docker-compose.yml; fi
+    consoleEntry "5" "8" "3" "1"
     if [ -f settings.conf ]; then chmod +rw settings.conf; fi
-
+    consoleEntry "5" "8" "4" "1"
     if [ -f build-config.sh ]; then chmod +x build-config.sh; fi
+    consoleEntry "5" "8" "5" "1"
     if [ -f build-compose.sh ]; then chmod +xrw build-compose.sh; fi
+    consoleEntry "5" "8" "6" "1"
     if [ -f manage-snapshot.sh ]; then chmod +x manage-snapshot.sh; fi
+    consoleEntry "5" "8" "7" "1"
     if [ -f bin/setup.sh ]; then chmod +x bin/setup.sh; fi
+    consoleEntry "5" "8" "8" "1"
     if [ -f bin//usr/local/bin/docker-compose ]; then sudo chmod +x /usr/local/bin/docker-compose; fi
-
-    echo -e "$RL$C  -Permissions:$R$G Set       $R"
+    consoleEntry "5" "9" "10" "0"
 }
 
 ###############################
 setupMain() {
-    echo -e "$M>Initiating Setup for $(checkPlatform)$R"
+    consoleTitle "Initiating Setup for $(checkPlatform)"
     installCurl
     installUnzip
     installDocker

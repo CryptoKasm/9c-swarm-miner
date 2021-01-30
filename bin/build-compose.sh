@@ -36,7 +36,7 @@ version: "2.4"
 services:
 EOF
 
-    mainPORT=31234
+    mainPORT=31235
     mainGqlPort=23061
     for ((i=1; i<=$NC_MINERS; i++)); do
         PORT=$((mainPORT++))

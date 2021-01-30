@@ -132,6 +132,9 @@ elif [ "$1" == "--clean-all" ]; then
     rm -r docker-compose.yml
     rm -f settings.conf
     rm -rf latest-snapshot
+elif [ "$1" == "--cron" ]; then
+    ./bin/manage-snapshot.sh --force
+    Main
 else
     Main
     exit 0

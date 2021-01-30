@@ -24,8 +24,6 @@
 - 4GB RAM
 - BIOS-level hardware virtualization support must be enabled in the BIOS settings.
 
-<br>
-
 **Script Tasks**
 1. Install: Windows Subsystem for Linux (WSL2)
 1. Install: Virtual Machine Platform
@@ -54,6 +52,12 @@ powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.Cr
 
 <br>
 
+## References
+- https://docs.microsoft.com/en-us/windows/wsl/install-win10
+- https://docs.docker.com/docker-for-windows/install-windows-home/
+
+<br>
+
 # Linux
 
 **Minimum System Requirements**
@@ -61,8 +65,6 @@ powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.Cr
 - (Min 2 cores) 64 bit processor with Second Level Address Translation (SLAT)
 - 4GB RAM
 - BIOS-level hardware virtualization support must be enabled in the BIOS settings.
-
-<br>
 
 **Script Tasks**
 1. Install: Dependencies
@@ -81,7 +83,8 @@ $ sudo apt install -y git
 2. ***Clone Repository***
 ```bash
 # Quick Download
-$ git clone https://github.com/CryptoKasm/9c-swarm-miner.git ~/9c-swarm-miner && cd ~/9c-swarm-miner
+$ git clone https://github.com/CryptoKasm/9c-swarm-miner.git $HOME/9c-swarm-miner
+$ cd $HOME/9c-swarm-miner
 ```
 
 3. ***Run Script (twice)***
@@ -128,9 +131,6 @@ NC_REFRESH_SNAPSHOT=1
 
 4. ***Run Script***
 ```bash
-# If you edited your settings.conf, you need to run the update command
-./9c-swarm-miner.sh --update
-
 # Now you can run it like normal.
 ./9c-swarm-miner.sh
 ```
@@ -149,6 +149,11 @@ NC_REFRESH_SNAPSHOT=1
 <br>
 
 * ***Congratulations! You are now mining NGC like a boss via Docker!***<br>
+
+<br>
+
+## References
+- https://github.com/planetarium/NineChronicles.Headless
 
 <br>
 

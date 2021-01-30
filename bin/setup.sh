@@ -125,15 +125,19 @@ checkPerms() {
     consoleEntry "5" "8" "3" "1"
     if [ -f settings.conf ]; then chmod +rw settings.conf; fi
     consoleEntry "5" "8" "4" "1"
-    if [ -f build-config.sh ]; then chmod +x build-config.sh; fi
+    if [ -f bin/build-config.sh ]; then chmod +x bin/build-config.sh; fi
     consoleEntry "5" "8" "5" "1"
-    if [ -f build-compose.sh ]; then chmod +xrw build-compose.sh; fi
+    if [ -f bin/build-compose.sh ]; then chmod +x bin/build-compose.sh; fi
     consoleEntry "5" "8" "6" "1"
-    if [ -f manage-snapshot.sh ]; then chmod +x manage-snapshot.sh; fi
+    if [ -f bin/manage-snapshot.sh ]; then chmod +x bin/manage-snapshot.sh; fi
     consoleEntry "5" "8" "7" "1"
     if [ -f bin/setup.sh ]; then chmod +x bin/setup.sh; fi
     consoleEntry "5" "8" "8" "1"
-    if [ -f bin//usr/local/bin/docker-compose ]; then sudo chmod +x /usr/local/bin/docker-compose; fi
+    if [ -f bin/consoleStyle.sh ]; then chmod +x bin/consoleStyle.sh; fi
+    consoleEntry "5" "8" "9" "1"
+    if [ -f bin/cronjob.sh ]; then chmod +x bin/cronjob.sh; fi
+    consoleEntry "5" "8" "9" "1"
+    if [ -f /usr/local/bin/docker-compose ]; then sudo chmod +x /usr/local/bin/docker-compose; fi
     consoleEntry "5" "9" "10" "0"
 }
 

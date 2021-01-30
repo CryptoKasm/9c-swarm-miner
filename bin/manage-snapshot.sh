@@ -45,7 +45,7 @@ copyVolume(){
     consoleTitle "Preparing Volumes on Platform"
     
     for ((i=1; i<=$NC_MINERS; i++)); do
-        echo -ne $S"|$RS Miner$((i))_1       $S|$C Copying...     $S|$C $(prog "1")\r"
+        echo -ne $S"|$RS Miner$((i))_1       $S|$C Copying...     $S|$C $(prog "1")"
         # NOTE: The location and the name of the docker volumes may differ, depending on the system.
         sudo docker cp . 9c-swarm-miner_swarm-miner$((i))_1:/app/data/
         echo -e $S"|$RS Miner$((i))_1       $S|$C Ready          $S|$C $(prog "10")"
@@ -76,12 +76,12 @@ refreshSnapshot() {
     consoleEntry "10" "5" "1" "1"
     cd latest-snapshot
     consoleEntry "10" "5" "3" "1"
-    curl -O $SNAPSHOT
-    consoleEntry "10" "14" "5" "3"
+    curl -# -O $SNAPSHOT
+    consoleEntry "10" "14" "5" "1"
     unzip 9c-main-snapshot.zip &> /dev/null
     consoleEntry "10" "15" "8" "1"
     mv 9c-main-snapshot.zip ../
-    consoleEntry "10" "16" "10" "0"
+    consoleEntry "10" "16" "10" "1"
     copyVolume
 }
 

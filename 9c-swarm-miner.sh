@@ -101,7 +101,7 @@ displayLogCmds() {
 startDocker() {
     echo -e $P"-----------------------------------------------"$RS
     consoleTitle "Starting Docker"
-    #docker-compose up -d 
+    docker-compose up -d 
     
 }
 

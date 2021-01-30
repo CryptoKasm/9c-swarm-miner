@@ -102,7 +102,7 @@ installCompose() {
 
     if ! [ -x "$(command -v docker-compose)" ]; then
         consoleEntry "2" "1" "3" "1"
-        sudo curl -L https://github.com/docker/compose/releases/download/$(compose_release)/docker-compose-$(uname -s)-$(uname -m) \
+        sudo curl -# -L https://github.com/docker/compose/releases/download/$(compose_release)/docker-compose-$(uname -s)-$(uname -m) \
         -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose
         consoleEntry "2" "1" "8" "1"
         

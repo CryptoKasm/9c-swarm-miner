@@ -50,8 +50,8 @@ checkConfig() {
 # Check: docker-compose.yml
 checkCompose() {
     if [ -f "docker-compose.yml" ]; then
-        consoleEntry "7" "4" "0" "0"
-        source settings.conf
+        consoleEntry "7" "4" "0" "1"
+        ./bin/build-compose.sh
     else
         ./bin/build-compose.sh
     fi

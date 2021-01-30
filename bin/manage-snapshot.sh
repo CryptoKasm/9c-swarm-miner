@@ -89,7 +89,7 @@ refreshSnapshot() {
 testAge() {
     if [ -d "$NC_SNAPSHOT" ] && [ -f "$NC_SNAPZIP" ]; then
         sudo chmod -R 700 $NC_SNAPSHOT
-        if [[ $(find "9c-main-snapshot.zip" -type f -mmin +120) ]]; then
+        if [[ $(find "9c-main-snapshot.zip" -type f -mmin +60) ]]; then
             refreshSnapshot
         else
             consoleEntry "9" "13" "0" "0"

@@ -1,0 +1,29 @@
+9c-swarm-miner.sh
+    1. Check: Platform
+    2. Check: Prereqs
+        Run: system.sh $args
+    3. Check, Build, Update: docker-compose.yml
+        Run: docker-compose.sh $args
+    4. Check, DL, Update: snapshot
+        Run: snapshot.sh $args
+    5. Run: Docker Stack
+
+system.sh
+    1. Check: Root Privileges
+    2. Check: Platform
+    3. Check: Prereqs
+    3. Check: Config
+    4. Check: 
+
+--------------------------------------------
+-Global
+    --Hide starting docker text and display my own
+    --Write error codes and documentation to follow
+    --Write function to catch thrown errors to refresh snapshot
+    --remove more text and replace with error_codes
+
+    --Rebuild docker-compose.yml every run
+
+*/1 * * * * echo "test" > /home/blaque/9c-swarm-miner/output.log 
+	
+*/1 * * * * /home/blaque/9c-swarm-miner/cron.sh > /home/blaque/9c-swarm-miner/cron.log

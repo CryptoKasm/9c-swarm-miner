@@ -1,5 +1,5 @@
 # Ignore CryptoKasm
-ck
+#ck
 
 # Ignore .settings.conf
 settings.conf
@@ -15,3 +15,6 @@ keystore
 
 # Ignore Snapshot Zip
 9c-main-snapshot.zip
+
+# Ignore Logs
+#logs

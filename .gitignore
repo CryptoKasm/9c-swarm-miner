@@ -10,8 +10,8 @@ docker-compose.yml
 # Ignore Latest Snapshot
 latest-snapshot
 
-# Ignore Keystore
-keystore
+# Ignore Vault
+vault
 
 # Ignore Snapshot Zip
 9c-main-snapshot.zip

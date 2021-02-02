@@ -35,6 +35,9 @@ NC_REFRESH_SNAPSHOT=1
 
 # Cronjob Auto Restart **HOURS** (0 OFF)
 NC_CRONJOB_AUTO_RESTART=2
+
+# Enable GraphQL Query Commands
+NC_GRAPHQL_QUERIES=1
 EOF
 
     fi

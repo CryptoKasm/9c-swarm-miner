@@ -35,8 +35,8 @@ version: "2.4"
 services:
 EOF
 
-    mainPORT=31234
-    mainGqlPort=23061
+    mainPORT=31235
+    mainGqlPort=23062
     for ((i=1; i<=$NC_MINERS; i++)); do
         PORT=$((mainPORT++))
         GQL_PORT=$((mainGqlPort++))
@@ -50,7 +50,8 @@ EOF
       - "$GQL_PORT:23061"
     volumes:
       - swarm-miner$i-volume:/app/data
-      - ./keystore:/app/planetarium/keystore
+      - ./vault/keystore:/app/planetarium/keystore
+      - ./vault/secret:/secret
     command: ['-V=$APV',
       '-G=https://9c-test.s3.ap-northeast-2.amazonaws.com/genesis-block-9c-main',
       '-D=5000000',
@@ -70,6 +71,7 @@ EOF
       '--ice-server=turn://0ed3e48007413e7c2e638f13ddd75ad272c6c507e081bd76a75e4b7adc86c9af:0apejou+ycZFfwtREeXFKdfLj2gCclKzz5ZJ49Cmy6I=@turn-us5.planetarium.dev:3478',
       '--graphql-server',
       '--graphql-port=23061',
+      '--graphql-secret-token-path=/secret/token',
       "--private-key=$NC_PRIVATE_KEY",
       '--log-minimum-level=$LOG_LEVEL']
     restart: always

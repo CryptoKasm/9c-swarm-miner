@@ -1,7 +1,7 @@
 #!/bin/bash
 source bin/cklib.sh
 
-#| Check: ROOT
+# Check: ROOT
 cRoot
 
 # Check: Run setup if first run
@@ -60,6 +60,25 @@ preCheck() {
     checkCompose
 }
 
+# Cleanup
+clean() {
+    if [[ "$1" == "1" ]]; then
+        sudo rm -f docker-compose.yml
+        sudo rm -rf latest-snapshot
+        sudo rm -f 9c-main-snapshot.zip
+        sudo rm -rf logs
+    elif [[ "$1" == "2" ]]; then
+        sudo rm -f docker-compose.yml
+        sudo rm -f settings.conf
+        sudo rm -rf latest-snapshot
+        sudo rm -f 9c-main-snapshot.zip
+        sudo rm -rf vault
+        sudo rm -rf logs
+    else
+        errCode "Not a valid cleaning option."
+    fi
+}
+
 # Autostart: Logging Docker Containers
 autoLog() {
     sLL
@@ -81,6 +100,26 @@ displayLogCmds() {
     sAction "docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block'"
     sTitle "Linux Monitor (Mined/Reorg/Append failed events):"
     sAction "docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a block|reorged|Append failed'"
+}
+
+# Update
+updateMain() {
+    sIntro
+    sTitle "Checking for updates"
+
+    startSpinner "Cleaning old files:"
+    p=1 #clean "1"
+    stopSpinner $?
+
+    startSpinner "Pulling from Github:"
+    {
+        git pull
+    } &> /dev/null
+    stopSpinner $?
+
+    ./bin/build-config.sh --update
+
+    ./bin/setup.sh --perms
 }
 
 # Start Docker Containers
@@ -109,6 +148,12 @@ Main() {
 if [ "$1" == "--setup" ]; then
     ./bin/setup.sh
     exit 0
+elif [ "$1" == "--update" ]; then
+    updateMain
+    exit 0
+elif [ "$1" == "--perms" ]; then
+    ./bin/setup.sh --perms
+    exit 0
 elif [ "$1" == "--crontab" ]; then
     cd /home/$USER/9c-swarm-miner
     rm -f 9c-main-snapshot.zip
@@ -120,7 +165,6 @@ elif [ "$1" == "--force-refresh" ]; then
     ./bin/manage-snapshot.sh --force
 elif [ "$1" == "--clean" ]; then
     sudo rm -f docker-compose.yml
-    sudo rm -rf latest-snapshot
     sudo rm -rf latest-snapshot
     sudo rm -f 9c-main-snapshot.zip
     sudo rm -rf logs

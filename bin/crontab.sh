@@ -15,14 +15,14 @@ CronService="cron"
 
 # Enable: Cron
 enableCron() {
-    startSpinner "Writing crontab entry:"
+    startSpinner "Enabled crontab entry:"
     ( crontab -l | grep -v -F "$CronCMD" ; echo "$CronJob" ) | crontab -
     stopSpinner $?
 }
 
 # Disable: Cron
 disableCron() {
-    startSpinner "Deleting crontab entry:"
+    startSpinner "Disabled crontab entry:"
     ( crontab -l | grep -v -F "$CronCMD" ) | crontab -
     stopSpinner $?
 }

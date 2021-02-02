@@ -1,6 +1,20 @@
 #!/bin/bash
 source bin/cklib.sh
 
+# Default Options
+defaultOptions() {
+    NC_1='0'
+    NC_2='debug'
+    NC_3='$NCPK'
+    NC_4=''
+    NC_5='1'
+    NC_6='6144M'
+    NC_7='2048M'
+    NC_8='1'
+    NC_9='2'
+    NC_10='1'
+}
+
 # Write: settings.conf
 writeConfig() {
     if [ -f "settings.conf" ]; then
@@ -10,38 +24,70 @@ writeConfig() {
 # Nine Chronicles - CryptoKasm Swarm Miner
 
 # Turn on/off debugging for this script (1 ON/0 OFF)
-DEBUG=0
+DEBUG=$NC_1
 
 # Set log level for all miners
-LOG_LEVEL=debug
+LOG_LEVEL=$NC_2
 
 # Nine Chronicles Private Key **KEEP SECRET**
-NC_PRIVATE_KEY=$NCPK
+NC_PRIVATE_KEY=$NC_3
 
 # Nine Chronicles Public Key **ALLOWS QUERY FOR NCG**
-NC_PUBLIC_KEY=
+NC_PUBLIC_KEY=$NC_4
 
 # Amount of Miners **DOCKER CONTAINERS**
-NC_MINERS=1
+NC_MINERS=$NC_5
 
 # Set MAX RAM Per Miner **PROTECTION FROM MEMORY LEAKS** 
-NC_RAM_LIMIT=6144M
+NC_RAM_LIMIT=$NC_6
 
 # Set MIN RAM Per Miner **SAVES RESOURCES FOR THAT CONTAINER** 
-NC_RAM_RESERVE=2048M
+NC_RAM_RESERVE=$NC_7
 
 # Refresh Snapshot each run (NATIVE LINUX ONLY 4 NOW) (1 ON/0 OFF)
-NC_REFRESH_SNAPSHOT=1
+NC_REFRESH_SNAPSHOT=$NC_8
 
 # Cronjob Auto Restart **HOURS** (0 OFF)
-NC_CRONJOB_AUTO_RESTART=2
+NC_CRONJOB_AUTO_RESTART=$NC_9
 
 # Enable GraphQL Query Commands
-NC_GRAPHQL_QUERIES=1
+NC_GRAPHQL_QUERIES=$NC_10
 EOF
 
     fi
 
+}
+
+# Create new config with previous variables
+rebuildConfig() {
+    rm -f settings.conf
+    if [ -f ".bak.settings.conf" ]; then
+        source .bak.settings.conf
+        NC_1="$DEBUG"
+        NC_2="$LOG_LEVEL"
+        NC_3="$NC_PRIVATE_KEY"
+        NC_4="$NC_PUBLIC_KEY"
+        NC_5="$NC_MINERS"
+        NC_6="$NC_RAM_LIMIT"
+        NC_7="$NC_RAM_RESERVE"
+        NC_8="$NC_REFRESH_SNAPSHOT"
+        NC_9="$NC_CRONJOB_AUTO_RESTART"
+        NC_10="$NC_GRAPHQL_QUERIES"
+
+        writeConfig
+    else
+        errCode "settings.conf backup not found."
+    fi
+    rm -f .bak.settings.conf
+}
+
+# Backup & Update Config File
+updateConfig() {
+    sL
+    startSpinner "Rebuilding settings.conf:"
+    mv settings.conf .bak.settings.conf
+    rebuildConfig
+    stopSpinner $?
 }
 
 ###############################
@@ -58,4 +104,10 @@ configMain() {
     stopSpinner $?
 }
 ###############################
-configMain
+if [ "$1" == "--update" ]; then
+    updateConfig
+    exit 0
+else
+    configMain
+    exit 0
+fi

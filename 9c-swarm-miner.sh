@@ -1,46 +1,23 @@
 #!/bin/bash
-source bin/consoleStyle.sh
+source bin/cklib.sh
 
-# Test: Root Privileges
-if [ "$EUID" -ne 0 ]; then
-    sudo echo ""
-fi
-
-# Check: Platform (Native Linux or WSL)
-checkPlatform() {
-    if grep -q icrosoft /proc/version; then
-        PLATFORM="WSL"
-    else
-        PLATFORM="NATIVE"
-    fi
-    echo $PLATFORM
-}
-
-# Exits script from function
-endScript() {
-    exit 0
-}
+#| Check: ROOT
+cRoot
 
 # Check: Run setup if first run
 checkFirstRun() {
-    if [ -f "settings.conf" ] || [ -f "docker-compose.yml" ]; then
-        return
-    else
+    if [ ! -f "settings.conf" ] && [ ! -f "docker-compose.yml" ]; then
         ./bin/setup.sh
-        echo
-        checkConfig
-        checkCompose
-        echo
-        echo -e $P">$sB If Docker was installed, log out and log in to complete the setup! Then re-run this script!"$RS
-        echo
-        #endScript
+    else
+        return
     fi
+    exit 0
 }
 
 # Check: settings.conf
 checkConfig() {
     if [ -f "settings.conf" ]; then
-        consoleEntry "6" "4" "0" "0"
+        sEntry "settings.conf"
         source settings.conf
     else
         ./bin/build-config.sh
@@ -50,67 +27,80 @@ checkConfig() {
 # Check: docker-compose.yml
 checkCompose() {
     if [ -f "docker-compose.yml" ]; then
-        consoleEntry "7" "4" "0" "1"
+        rm -f docker-compose.yml
         ./bin/build-compose.sh
     else
         ./bin/build-compose.sh
+    fi
+}
+
+# Check: Crontab
+checkCronTab() {
+    if [[ "$NC_CRONJOB_AUTO_RESTART" == 0 ]]; then
+        ./bin/crontab.sh --disable
+    else
+        ./bin/crontab.sh --enable
     fi
 }
 
 # Check: Snapshot
 checkSnapshot() {
-    echo -e $P"-----------------------------------------------"$RS
+    sL
     if [[ "$NC_REFRESH_SNAPSHOT" == 1 ]]; then
         ./bin/manage-snapshot.sh
     else
-        consoleTitle "Snapshot Management:$F Disabled$RS"
+        sTitle "Snapshot Management:$C Disabled"
     fi
 }
 
 # Precheck
 preCheck() {
-    consoleTitle "Loading Prerequisites"
+    sTitle "Loading Prerequisites"
     checkConfig
     checkCompose
 }
 
 # Autostart: Logging Docker Containers
 autoLog() {
+    sLL
+    sTitle "Auto Logging Filers: Mined a block | reorged | Append failed"
     export GREP_COLORS='ms=1;92'
-    echo -e $P"-----------------------------------------------"$RS
-    consoleTitle "Docker Logging - Mined a block | reorged | Append failed"
     docker-compose logs --tail=1000 -f | grep --color -i -E 'Mined a block|reorged|Append failed'
 }
 
 # Display Log Commands
 displayLogCmds() {
-    echo -e $P"-----------------------------------------------"$RS
-    consoleTitle "Windows Monitor (Full Log):"
-    echo -e "    Open Docker and you can access logging for each individual container"
-    consoleTitle "Windows Monitor (Mined Blocks Only):"
-    echo -e "    Search for Mined a block"
-    consoleTitle "Linux Monitor (Full Log):"
-    echo -e "    docker-compose logs --tail=100 -f"
-    consoleTitle "Linux Monitor (Mined Blocks Only):"
-    echo -e "    docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block'"
-    consoleTitle "Linux Monitor (Mined/Reorg/Append failed events):"
-    echo -e "    docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a block|reorged|Append failed'"
+    sLL
+    sTitle "Windows Monitor (Full Log):"
+    sAction "Open Docker and you can access logging for each individual container"
+    sTitle "Windows Monitor (Mined Blocks Only):"
+    sAction "Search for 'Mined a block'"
+    sTitle "Linux Monitor (Full Log):"
+    sAction "docker-compose logs --tail=100 -f"
+    sTitle "Linux Monitor (Mined Blocks Only):"
+    sAction "docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block'"
+    sTitle "Linux Monitor (Mined/Reorg/Append failed events):"
+    sAction "docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a block|reorged|Append failed'"
 }
 
 # Start Docker Containers
 startDocker() {
-    echo -e $P"-----------------------------------------------"$RS
-    consoleTitle "Starting Docker"
-    docker-compose up -d 
-    
+    sL
+    sTitle "Docker"
+    startSpinner "Initiating containers:"
+    { 
+        docker-compose up -d
+    } &> /dev/null
+    stopSpinner $?
 }
 
 ###############################
 Main() {
-    consoleIntro
+    sIntro
     checkFirstRun
     preCheck
-    checkSnapshot
+    checkCronTab
+    #checkSnapshot
     startDocker
     displayLogCmds
     autoLog
@@ -119,24 +109,28 @@ Main() {
 if [ "$1" == "--setup" ]; then
     ./bin/setup.sh
     exit 0
-elif [ "$1" == "--update" ]; then
-    ./bin/build-compose.sh
+elif [ "$1" == "--crontab" ]; then
+    cd /home/$USER/9c-swarm-miner
+    rm -f 9c-main-snapshot.zip
+    docker-compose down -v --remove-orphans
+    Main
 elif [ "$1" == "--refresh" ]; then
     ./bin/manage-snapshot.sh
 elif [ "$1" == "--force-refresh" ]; then
     ./bin/manage-snapshot.sh --force
 elif [ "$1" == "--clean" ]; then
-    rm -r docker-compose.yml
+    rm -f docker-compose.yml
     rm -rf latest-snapshot
+    rm -rf latest-snapshot
+    rm -f 9c-main-snapshot.zip
+    rm -rf logs
 elif [ "$1" == "--clean-all" ]; then
-    rm -r docker-compose.yml
+    rm -f docker-compose.yml
     rm -f settings.conf
-    sudo rm -rf latest-snapshot
-    sudo rm -rf vault
-    sudo rm -rf logs
-elif [ "$1" == "--cron" ]; then
-    ./bin/manage-snapshot.sh --force
-    Main
+    rm -rf latest-snapshot
+    rm -f 9c-main-snapshot.zip
+    rm -rf vault
+    rm -rf logs
 else
     Main
     exit 0

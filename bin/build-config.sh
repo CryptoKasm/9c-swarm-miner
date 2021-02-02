@@ -1,9 +1,8 @@
 #!/bin/bash
-source bin/consoleStyle.sh
+source bin/cklib.sh
 
 # Write: settings.conf
 writeConfig() {
-    consoleEntry "6" "4" "1" "1"
     if [ -f "settings.conf" ]; then
         echo "   --File Found: settings.conf" 
     else
@@ -47,13 +46,16 @@ EOF
 
 ###############################
 configMain() {
-    #consoleTitle "Building Configuration File"
-    echo -e " | Please enter the requested information or press enter and edit later!"
-    echo -e " | Edit configuration file after creation:$RS settings.conf"
-    echo
-    read -p "$(echo -e $P">$sB SECRET_KEY: "$RS)" NCPK
-    echo
+    sL
+    sTitle "Building settings.conf"
+    sAction "Please enter the requested information or press enter and edit later!"
+    sAction "Edit configuration file after creation: settings.conf"
+    sSpacer
+    read -p "$(echo -e $P"|$sB SECRET_KEY: "$RS)" NCPK
+    sSpacer
+    startSpinner "Writing settings.conf:"
     writeConfig
+    stopSpinner $?
 }
 ###############################
 configMain

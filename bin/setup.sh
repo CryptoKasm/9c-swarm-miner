@@ -84,6 +84,21 @@ installCompose() {
     stopSpinner $?
 }
 
+# Install: CronTab
+installCronTab() {
+    ./bin/crontab.sh
+}
+
+# Build: Settings.conf
+buildConfig() {
+    ./bin/build-config.sh
+}
+
+# Build: docker-compose.yml
+buildCompose() {
+    ./bin/build-compose.sh
+}
+
 # Check: Permissions
 checkPerms() {
     startSpinner "Setting permissions:"
@@ -94,6 +109,7 @@ checkPerms() {
     if [ -f bin/build-compose.sh ]; then chmod +xrw bin/build-compose.sh; fi
     if [ -f bin/manage-snapshot.sh ]; then chmod +x bin/manage-snapshot.sh; fi
     if [ -f bin/setup.sh ]; then chmod +x bin/setup.sh; fi
+    if [ -f bin/crontab.sh ]; then chmod +x bin/crontab.sh; fi
     if [ -f bin/cklib.sh ]; then chmod +x bin/cklib.sh; fi
     if [ -f /usr/local/bin/docker-compose ]; then sudo chmod +x /usr/local/bin/docker-compose; fi
     stopSpinner $?
@@ -107,8 +123,9 @@ setupMain() {
     installDocker
     installCompose
     checkPerms
-    ./bin/build-config.sh
-    ./bin/build-compose.sh
+    installCronTab
+    buildConfig
+    buildCompose
     sLL
     sTitle "Log out and then log in to complete the setup! Then re-run this script!"
     echo

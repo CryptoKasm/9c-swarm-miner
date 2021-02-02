@@ -34,6 +34,15 @@ checkCompose() {
     fi
 }
 
+# Check: Crontab
+checkCronTab() {
+    if [[ "$NC_CRONJOB_AUTO_RESTART" == 0 ]]; then
+        ./bin/crontab.sh --disable
+    else
+        ./bin/crontab.sh --enable
+    fi
+}
+
 # Check: Snapshot
 checkSnapshot() {
     sL
@@ -90,7 +99,8 @@ Main() {
     sIntro
     checkFirstRun
     preCheck
-    checkSnapshot
+    checkCronTab
+    #checkSnapshot
     startDocker
     displayLogCmds
     autoLog
@@ -99,8 +109,11 @@ Main() {
 if [ "$1" == "--setup" ]; then
     ./bin/setup.sh
     exit 0
-elif [ "$1" == "--update" ]; then
-    ./bin/build-compose.sh
+elif [ "$1" == "--crontab" ]; then
+    cd /home/$USER/9c-swarm-miner
+    rm -f 9c-main-snapshot.zip
+    docker-compose down -v --remove-orphans
+    Main
 elif [ "$1" == "--refresh" ]; then
     ./bin/manage-snapshot.sh
 elif [ "$1" == "--force-refresh" ]; then

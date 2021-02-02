@@ -119,18 +119,18 @@ elif [ "$1" == "--refresh" ]; then
 elif [ "$1" == "--force-refresh" ]; then
     ./bin/manage-snapshot.sh --force
 elif [ "$1" == "--clean" ]; then
-    rm -f docker-compose.yml
-    rm -rf latest-snapshot
-    rm -rf latest-snapshot
-    rm -f 9c-main-snapshot.zip
-    rm -rf logs
+    sudo rm -f docker-compose.yml
+    sudo rm -rf latest-snapshot
+    sudo rm -rf latest-snapshot
+    sudo rm -f 9c-main-snapshot.zip
+    sudo rm -rf logs
 elif [ "$1" == "--clean-all" ]; then
-    rm -f docker-compose.yml
-    rm -f settings.conf
-    rm -rf latest-snapshot
-    rm -f 9c-main-snapshot.zip
-    rm -rf vault
-    rm -rf logs
+    sudo rm -f docker-compose.yml
+    sudo rm -f settings.conf
+    sudo rm -rf latest-snapshot
+    sudo rm -f 9c-main-snapshot.zip
+    sudo rm -rf vault
+    sudo rm -rf logs
 else
     Main
     exit 0

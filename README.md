@@ -127,6 +127,12 @@ NC_RAM_RESERVE=2048M
 
 # Refresh Snapshot each run (NATIVE LINUX ONLY 4 NOW) (1 ON/0 OFF)
 NC_REFRESH_SNAPSHOT=1
+
+# Cronjob Auto Restart **HOURS** (0 OFF)
+NC_CRONJOB_AUTO_RESTART=2
+
+# Enable GraphQL Query Commands
+NC_GRAPHQL_QUERIES=1
 ```
 
 4. ***Run Script***
@@ -139,7 +145,6 @@ NC_REFRESH_SNAPSHOT=1
 # Usage:
 ./9c-swarm-miner.sh [OPTION] #Run normally, without options
     --setup             # Installs prereqs for script
-    --update            # Checks for docker-compose.yml updates via github
     --refresh           # Refresh snapshot if older than 2hrs
     --force-refresh     # Force refresh snapshot
     --clean             # Cleans refreshable files (downloaded/generated files)

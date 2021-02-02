@@ -100,7 +100,7 @@ Main() {
     checkFirstRun
     preCheck
     checkCronTab
-    #checkSnapshot
+    checkSnapshot
     startDocker
     displayLogCmds
     autoLog

@@ -60,8 +60,9 @@ EOF
 
 # Create new config with previous variables
 rebuildConfig() {
-    rm -f settings.conf
     if [ -f ".bak.settings.conf" ]; then
+        rm -f settings.conf
+
         source .bak.settings.conf
         NC_1="$DEBUG"
         NC_2="$LOG_LEVEL"
@@ -75,10 +76,11 @@ rebuildConfig() {
         NC_10="$NC_GRAPHQL_QUERIES"
 
         writeConfig
+
+        rm -f .bak.settings.conf
     else
         errCode "settings.conf backup not found."
     fi
-    rm -f .bak.settings.conf
 }
 
 # Backup & Update Config File

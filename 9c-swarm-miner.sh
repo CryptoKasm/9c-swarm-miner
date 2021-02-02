@@ -108,7 +108,7 @@ updateMain() {
     sTitle "Checking for updates"
 
     startSpinner "Cleaning old files:"
-    p=1 #clean "1"
+    clean "1"
     stopSpinner $?
 
     startSpinner "Pulling from Github:"

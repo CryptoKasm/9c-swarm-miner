@@ -1,9 +1,10 @@
 #!/bin/bash
-source bin/consoleStyle.sh
+source bin/cklib.sh
+
+cSettings
 
 # Update: Build Parameters from Online
 updateBuildParams() {
-    consoleEntry "2" "3" "2" "1"
     CURRENT="buildparams.txt"
     NEW="new.buildparams.txt"
     BUILDPARAMS="https://raw.githubusercontent.com/CryptoKasm/9c-swarm-miner/master/buildparams.txt"
@@ -11,8 +12,7 @@ updateBuildParams() {
     curl $BUILDPARAMS -s -o $NEW
     
     if [ -f $CURRENT ]; then
-        consoleEntry "2" "3" "4" "1"
-        #Check: Update
+        # Check: Update
         if cmp -s $CURRENT $NEW; then
             return
         else
@@ -21,7 +21,6 @@ updateBuildParams() {
             rm -f docker-compose.yml
         fi
     else
-        consoleEntry "2" "3" "4" "1"
         cp $NEW $CURRENT
     fi
 }
@@ -95,31 +94,20 @@ cleanTemp() {
 
 ###############################
 composeMain() {
-    consoleEntry "2" "3" "1" "1"
-    if [ -f "settings.conf" ]; then
-        source settings.conf
-    else
-        echo -e $P">$sB Please run setup! Then re-run this script"$RS
-        exit 0
-    fi
-    
+    sL
+    sTitle "Building docker-compose.yml"
+    startSpinner "Writing docker-compose.yml:"
     updateBuildParams
     source buildparams.txt
     
     if [ -f "docker-compose.yml" ]; then
-        consoleEntry "2" "3" "6" "1"
         rm -f docker-compose.yml 
         buildComposeFile
-        consoleEntry "2" "3" "8" "1"
     else
-        consoleEntry "2" "3" "6" "1"
         buildComposeFile
-        consoleEntry "2" "3" "8" "1"
     fi
-    consoleEntry "2" "10" "10" "0"
-    #echo -ne $S"\e[0A\e[|$RS Docker-Compose $S|$C Ready          $S|$C $(prog "00")"$RS
     cleanTemp
-    
+    stopSpinner $?
     exit 0
 }
 ###############################

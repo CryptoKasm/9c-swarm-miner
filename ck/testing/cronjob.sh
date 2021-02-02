@@ -20,15 +20,17 @@ checkPlatform() {
 }
 
 #Setup: Crontab
-if [ $(checkPlatform) = "WSL" ]; then
-    echo -e "\nsudo -i service cron start\n" >> /home/blaque/.bashrc
-    
-    ( crontab -l | grep -v -F "$CronCMD" ; echo "$CronJob" ) | crontab -
-elif [ $(checkPlatform) = "NATIVE" ]; then
-    ( crontab -l | grep -v -F "$CronCMD" ; echo "$CronJob" ) | crontab -
-else
-    errCode "Couldn't identify your OS!"
-fi
+setupCron(){
+    if [ $(checkPlatform) = "WSL" ]; then
+        echo -e "\nsudo -i service cron start\n" >> /home/blaque/.bashrc
+        
+        ( crontab -l | grep -v -F "$CronCMD" ; echo "$CronJob" ) | crontab -
+    elif [ $(checkPlatform) = "NATIVE" ]; then
+        ( crontab -l | grep -v -F "$CronCMD" ; echo "$CronJob" ) | crontab -
+    else
+        errCode "Couldn't identify your OS!"
+    fi
+}
 
 ###############################
 cronMain() {

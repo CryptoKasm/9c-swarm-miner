@@ -162,11 +162,19 @@ NC_GRAPHQL_QUERIES=1
 
 <br>
 
+# Issues & Solutions
+- **WslRegisterDistribution failed with error: 0xc03a001a**
+~~~powershell
+1. Find the folder "CanonicalGroupLimited.Ubuntu20.04onWindows_xxxx" located at "C:\Users\<USERNAME>\AppData\Local\Packages".
+2. Right click folder > Properties > Advanced > Uncheck "Compress Contents to save disk"
+~~~
+
+<br>
+
 # Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
-
 
 <br>
 

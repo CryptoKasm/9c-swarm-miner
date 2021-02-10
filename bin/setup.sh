@@ -34,7 +34,7 @@ installUnzip() {
 installDocker() {
     startSpinner "Installing docker:"
     if ! [ -x "$(command -v docker)" ]; then
-        if [ $(checkPlatform) = "NATIVE" ]; then
+        if [ $(cPlatform) = "NATIVE" ]; then
             consoleEntry "1" "2" "3" "1"
             # Removing leftovers if Docker is not found
             {

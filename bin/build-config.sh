@@ -5,13 +5,13 @@ source bin/cklib.sh
 defaultOptions() {
     NC_1='0'
     NC_2='debug'
-    NC_3='$NCPK'
+    NC_3="$NCPK"
     NC_4=''
     NC_5='1'
     NC_6='6144M'
     NC_7='2048M'
     NC_8='1'
-    NC_9='2'
+    NC_9='0'
     NC_10='1'
 }
 
@@ -102,6 +102,7 @@ configMain() {
     read -p "$(echo -e $P"|$sB SECRET_KEY: "$RS)" NCPK
     sSpacer
     startSpinner "Writing settings.conf:"
+    defaultOptions
     writeConfig
     stopSpinner $?
 }

@@ -45,10 +45,10 @@ checkCronTab() {
 
 # Check: Snapshot
 checkSnapshot() {
-    sL
     if [[ "$NC_REFRESH_SNAPSHOT" == 1 ]]; then
         ./bin/manage-snapshot.sh
     else
+        sL
         sTitle "Snapshot Management:$C Disabled"
     fi
 }
@@ -99,7 +99,7 @@ displayLogCmds() {
     sTitle "Linux Monitor (Mined Blocks Only):"
     sAction "docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block'"
     sTitle "Linux Monitor (Mined/Reorg/Append failed events):"
-    sAction "docker-compose logs --tail=1 -f | grep --color -i -E 'Mined a block|reorged|Append failed'"
+    sAction "docker-compose logs --tail=100 -f | grep --color -i -E 'Mined a block|reorged|Append failed'"
 }
 
 # Update

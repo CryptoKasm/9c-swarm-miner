@@ -38,8 +38,11 @@ refreshSnapshot() {
     } &> /dev/null
     
     if [ -d "$NC_SNAPSHOT" ]; then
-        rm -f $NC_SNAPZIP
         rm -rf latest-snapshot/* &> /dev/null
+        
+        if [ -f $NC_SNAPZIP ]; then 
+            rm -f $NC_SNAPZIP &> /dev/null 
+        fi
     else
         mkdir -p latest-snapshot &> /dev/null
     fi
@@ -69,15 +72,14 @@ testAge() {
 forceRefresh() {
     sLL
     sTitle "Snapshot Management: $(cPlatform)"
-    startSpinner "Refreshing snapshot:"
     refreshSnapshot
-    stopSpinner $?
     sLL
 }
 
 ###############################
 snapshotMain() {
-    sTitle "Snapshot Management"
+    sLL
+    sTitle "Snapshot Management: $(cPlatform)"
     testAge
 }
 ###############################

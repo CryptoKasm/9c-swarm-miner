@@ -134,6 +134,9 @@ sLL() {
 sAction() {
     echo -e $P"|$sB   $1"$RS
 }
+sMenuEntry() {
+    echo -e $P"|$S   $1$P.$S $2"$RS
+}
 
 #+---------------------------------------------+#
 #| Functions                                   |#

@@ -175,6 +175,8 @@ elif [ "$1" == "--clean-all" ]; then
     sudo rm -f 9c-main-snapshot.zip
     sudo rm -rf vault
     sudo rm -rf logs
+elif [ "$1" == "--check-gold" ]; then
+    ./bin/graphql-query.sh --check-gold
 else
     Main
     exit 0

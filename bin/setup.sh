@@ -111,6 +111,7 @@ checkPerms() {
     if [ -f bin/setup.sh ]; then chmod +x bin/setup.sh; fi
     if [ -f bin/crontab.sh ]; then chmod +x bin/crontab.sh; fi
     if [ -f bin/cklib.sh ]; then chmod +x bin/cklib.sh; fi
+    if [ -f bin/graphql-query.sh ]; then chmod +x bin/graphql-query.sh; fi
     if [ -f /usr/local/bin/docker-compose ]; then sudo chmod +x /usr/local/bin/docker-compose; fi
     stopSpinner $?
 }

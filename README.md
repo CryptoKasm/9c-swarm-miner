@@ -129,7 +129,7 @@ NC_RAM_RESERVE=2048M
 NC_REFRESH_SNAPSHOT=1
 
 # Cronjob Auto Restart **HOURS** (0 OFF)
-NC_CRONJOB_AUTO_RESTART=2
+NC_CRONJOB_AUTO_RESTART=0
 
 # Enable GraphQL Query Commands
 NC_GRAPHQL_QUERIES=1
@@ -145,15 +145,27 @@ NC_GRAPHQL_QUERIES=1
 # Usage:
 ./9c-swarm-miner.sh [OPTION] #Run normally, without options
     --setup             # Installs prereqs for script
+    --update            # Updates source code
     --refresh           # Refresh snapshot if older than 2hrs
     --force-refresh     # Force refresh snapshot
     --clean             # Cleans refreshable files (downloaded/generated files)
     --clean-all         # Fresh Install (downloaded/generated files,settings)
+    --check-gold        # Checks current gold balance via GraphQL query
 ```
 
 <br>
 
 * ***Congratulations! You are now mining NGC like a boss via Docker!***<br>
+
+<br>
+
+***Extra Features***
+```bash
+# Check: Nine Chronicles Gold Balance
+./9c-swarm-miner.sh --check-gold
+```
+
+
 
 <br>
 

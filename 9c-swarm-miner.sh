@@ -107,6 +107,10 @@ updateMain() {
     sIntro
     sTitle "Checking for updates"
 
+    startSpinner "Shutting down docker containers:"
+    docker-compose down -v --remove-orphans
+    stopSpinner $?
+
     startSpinner "Cleaning old files:"
     clean "1"
     stopSpinner $?
@@ -164,17 +168,9 @@ elif [ "$1" == "--refresh" ]; then
 elif [ "$1" == "--force-refresh" ]; then
     ./bin/manage-snapshot.sh --force
 elif [ "$1" == "--clean" ]; then
-    sudo rm -f docker-compose.yml
-    sudo rm -rf latest-snapshot
-    sudo rm -f 9c-main-snapshot.zip
-    sudo rm -rf logs
+    clean "1"
 elif [ "$1" == "--clean-all" ]; then
-    sudo rm -f docker-compose.yml
-    sudo rm -f settings.conf
-    sudo rm -rf latest-snapshot
-    sudo rm -f 9c-main-snapshot.zip
-    sudo rm -rf vault
-    sudo rm -rf logs
+    clean "2"
 elif [ "$1" == "--check-gold" ]; then
     ./bin/graphql-query.sh --check-gold
 else

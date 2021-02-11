@@ -7,7 +7,7 @@ cRoot
 # Install: Curl
 installCurl() {
     startSpinner "Installing curl:"
-    if ! [ -x "$(command -v corl)" ]; then
+    if ! [ -x "$(command -v curl)" ]; then
         sudo apt install curl -y &> /dev/null
 
         if ! [ -x "$(command -v curl)" ]; then 
@@ -84,6 +84,19 @@ installCompose() {
     stopSpinner $?
 }
 
+# Install: JQ
+installJq() {
+    startSpinner "Installing jq:"
+    if ! [ -x "$(command -v jq)" ]; then
+        sudo apt install jq -y &> /dev/null
+
+        if ! [ -x "$(command -v jq)" ]; then 
+            errCode "Can't install 'jq'" 
+        fi
+    fi
+    stopSpinner $?
+}
+
 # Install: CronTab
 installCronTab() {
     ./bin/crontab.sh
@@ -123,6 +136,7 @@ setupMain() {
     installUnzip
     installDocker
     installCompose
+    installJq
     checkPerms
     installCronTab
     buildConfig

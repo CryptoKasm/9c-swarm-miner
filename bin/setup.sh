@@ -129,9 +129,17 @@ checkPerms() {
     stopSpinner $?
 }
 
+# Sudo apt update
+checkAptUpdate() {
+    startSpinner "Checking for APT updates:"
+    sudo apt update &> /dev/null
+    stopSpinner $?
+}
+
 ###############################
 setupMain() {
     sTitle "Initiating Setup for $(cPlatform)"
+    checkAptUpdate
     installCurl
     installUnzip
     installDocker

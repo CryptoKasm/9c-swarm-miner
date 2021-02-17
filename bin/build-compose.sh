@@ -52,6 +52,11 @@ EOF
       - swarm-miner$i-volume:/app/data
       - ./vault/keystore:/app/planetarium/keystore
       - ./vault/secret:/secret
+    logging:
+      driver: "json-file"
+      options:
+        "max-size": "10m"
+        "max-file": "2"
     command: ['-V=$APV',
       '-G=https://9c-test.s3.ap-northeast-2.amazonaws.com/genesis-block-9c-main',
       '-D=5000000',

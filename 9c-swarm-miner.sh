@@ -160,9 +160,8 @@ elif [ "$1" == "--perms" ]; then
     exit 0
 elif [ "$1" == "--crontab" ]; then
     cd /home/$USER/9c-swarm-miner
-    rm -f 9c-main-snapshot.zip
-    docker-compose down -v --remove-orphans
-    Main
+    docker-compose stop
+    docker-compose up -d
 elif [ "$1" == "--refresh" ]; then
     ./bin/manage-snapshot.sh
 elif [ "$1" == "--force-refresh" ]; then

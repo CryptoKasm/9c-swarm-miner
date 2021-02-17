@@ -10,7 +10,6 @@ cSettings
 # Variables
 CronCMD="/home/$USER/9c-swarm-miner/9c-swarm-miner.sh --crontab > /home/$USER/9c-swarm-miner/logs/cron_`date +%Y-%m-%H\ %k:%M:%S`.log 2>&1"
 CronJob="* */$NC_CRONJOB_AUTO_RESTART * * * $CronCMD"
-CronJob="*/5 * * * * $CronCMD"
 CronService="cron"
 
 # Enable: Cron
@@ -29,7 +28,7 @@ disableCron() {
 
 # Install: CronTab
 installCronTab() {
-    startSpinner "Installing crontab:"
+    startSpinner "Checking crontab:"
     if ! [ -x "$(command -v cron)" ]; then
         sudo apt install cron -y &> /dev/null
 

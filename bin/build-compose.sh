@@ -55,8 +55,8 @@ EOF
     logging:
       driver: "json-file"
       options:
-        "max-size": "10m"
-        "max-file": "2"
+        "max-size": "20m"
+        "max-file": "1"
     command: ['-V=$APV',
       '-G=https://9c-test.s3.ap-northeast-2.amazonaws.com/genesis-block-9c-main',
       '-D=5000000',

@@ -290,7 +290,6 @@ if ($rebootRequired) {
     wsl --set-default-version 2 | Out-Null
     $distro = Select-Distro
     Install-Distro($distro)
-    New-NetFirewallRule -DisplayName "WSL" -Direction Inbound  -InterfaceAlias "vEthernet (WSL)"  -Action Allow
     if ($distro.AppxName.Length -gt 1) {
         Write-Host("----------------------------------------")
         Write-Host(">> Starting distro in new prompt...")
@@ -322,3 +321,4 @@ if ($rebootRequired) {
         }
     }
 }
+New-NetFirewallRule -DisplayName "WSL" -Direction Inbound  -InterfaceAlias "vEthernet (WSL)"  -Action Allow

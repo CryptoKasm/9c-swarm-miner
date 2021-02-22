@@ -4,6 +4,18 @@ source bin/cklib.sh
 # Check: ROOT
 cRoot
 
+# Set permissions for this project
+checkPermissions() {
+    # Set directory permissions
+    sudo find . -type d -exec chmod 755 {} \;
+
+    # Set file permissions
+    sudo find . -type f -exec chmod 644 {} \;
+
+    # Set scripts as executable
+    sudo find . -name "*.sh" -exec chmod +x {} \;
+}
+
 # Check: Run setup if first run
 checkFirstRun() {
     if [ ! -f "settings.conf" ] && [ ! -f "docker-compose.yml" ]; then
@@ -140,6 +152,7 @@ startDocker() {
 ###############################
 Main() {
     sIntro
+    checkPermissions
     checkFirstRun
     preCheck
     checkCronTab
@@ -156,7 +169,7 @@ elif [ "$1" == "--update" ]; then
     updateMain
     exit 0
 elif [ "$1" == "--perms" ]; then
-    ./bin/setup.sh --perms
+    checkPermissions
     exit 0
 elif [ "$1" == "--crontab" ]; then
     cd /home/$USER/9c-swarm-miner

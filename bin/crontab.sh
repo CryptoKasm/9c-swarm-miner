@@ -10,7 +10,7 @@ cSettings
 # Variables
 CronPath="PATH=/bin:/usr/bin:/usr/local/bin"
 CronCMD="cd /home/$USER/9c-swarm-miner && ./9c-swarm-miner.sh --crontab >> /home/$USER/9c-swarm-miner/logs/cron.log 2>&1"
-CronJob="* */2 * * * $CronCMD"
+CronJob="* */$NC_CRONJOB_AUTO_RESTART * * * $CronCMD"
 CronService="cron"
 
 # Create Log folder

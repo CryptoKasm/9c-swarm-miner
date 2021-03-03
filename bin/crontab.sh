@@ -8,21 +8,24 @@ cRoot
 cSettings
 
 # Variables
-CronCMD="/home/$USER/9c-swarm-miner/9c-swarm-miner.sh --crontab > /home/$USER/9c-swarm-miner/logs/cron_`date +%Y-%m-%H\ %k:%M:%S`.log 2>&1"
-CronJob="* */$NC_CRONJOB_AUTO_RESTART * * * $CronCMD"
+CronPath="PATH=/bin:/usr/bin:/usr/local/bin"
+CronCMD="cd /home/$USER/9c-swarm-miner && ./9c-swarm-miner.sh --crontab >> /home/$USER/9c-swarm-miner/logs/cron.log 2>&1"
+CronJob="* */2 * * * $CronCMD"
 CronService="cron"
 
 # Enable: Cron
 enableCron() {
     startSpinner "Enabled crontab entry:"
-    ( crontab -l | grep -v -F "$CronCMD" ; echo "$CronJob" ) | crontab -
+    ( sudo crontab -l | grep -v -F "$CronPath" ; echo "$CronPath" ) | sudo crontab -
+    ( sudo crontab -l | grep -v -F "$CronCMD" ; echo "$CronJob" ) | sudo crontab -
     stopSpinner $?
 }
 
 # Disable: Cron
 disableCron() {
     startSpinner "Disabled crontab entry:"
-    ( crontab -l | grep -v -F "$CronCMD" ) | crontab -
+    ( sudo crontab -l | grep -v -F "$CronPath" ) | sudo crontab -
+    ( sudo crontab -l | grep -v -F "$CronCMD" ) | sudo crontab -
     stopSpinner $?
 }
 

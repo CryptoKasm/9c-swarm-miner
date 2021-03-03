@@ -172,8 +172,8 @@ elif [ "$1" == "--perms" ]; then
     checkPermissions
     exit 0
 elif [ "$1" == "--crontab" ]; then
-    cd /home/$USER/9c-swarm-miner
     docker-compose stop
+    bin/manage-snapshot.sh
     docker-compose up -d
 elif [ "$1" == "--refresh" ]; then
     ./bin/manage-snapshot.sh

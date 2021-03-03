@@ -91,7 +91,7 @@ $ cd $HOME/9c-swarm-miner
 3. ***Run Script (twice)***
 ```bash
 # First run will setup system, each run after that will execute like normal
-$ sh ./9c-swarm-miner.sh
+$ ./9c-swarm-miner.sh
 # Follow instuctions
 ```
 

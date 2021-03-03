@@ -35,7 +35,6 @@ installDocker() {
     startSpinner "Installing docker:"
     if ! [ -x "$(command -v docker)" ]; then
         if [ $(cPlatform) = "NATIVE" ]; then
-            consoleEntry "1" "2" "3" "1"
             # Removing leftovers if Docker is not found
             {
             sudo apt remove --yes docker docker-engine docker.io containerd runc

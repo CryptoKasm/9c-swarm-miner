@@ -13,6 +13,12 @@ CronCMD="cd /home/$USER/9c-swarm-miner && ./9c-swarm-miner.sh --crontab >> /home
 CronJob="* */2 * * * $CronCMD"
 CronService="cron"
 
+# Create Log folder
+if [ ! -d "logs" ]; then
+        mkdir -p logs
+fi
+
+
 # Enable: Cron
 enableCron() {
     startSpinner "Enabled crontab entry:"

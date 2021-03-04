@@ -112,6 +112,14 @@ displayLogCmds() {
     sAction "docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block'"
     sTitle "Linux Monitor (Mined/Reorg/Append failed events):"
     sAction "docker-compose logs --tail=100 -f | grep --color -i -E 'Mined a block|reorged|Append failed'"
+    sSpacer
+    read -p "$(echo -e $S"> Would you like to run auto-logging ['Mined a block|reorged|Append failed'] (Y/n)?: "$RS)" optionLog
+    if [[ $optionLog == [yY] || $optionLog == [yY][eE][sS] ]]; then
+        autoLog
+    else
+        exit 0
+    fi
+
 }
 
 # Update
@@ -159,7 +167,6 @@ Main() {
     checkSnapshot
     startDocker
     displayLogCmds
-    autoLog
 }
 ###############################
 if [ "$1" == "--setup" ]; then

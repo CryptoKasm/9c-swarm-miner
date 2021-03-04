@@ -3,33 +3,6 @@ source bin/cklib.sh
 
 cSettings
 
-# Update: Build Parameters from Online
-updateBuildParams() {
-    CURRENT="buildparams.txt"
-    NEW="new.buildparams.txt"
-    BUILDPARAMS="https://download.nine-chronicles.com/apv.json"
-
-    APV1="`curl --silent $BUILDPARAMS | jq '.apv'`"
-    DOCKERIMAGE1="`curl --silent $BUILDPARAMS | jq  '.docker'`"
-    SNAPSHOT1="`curl --silent $BUILDPARAMS | jq '."snapshotPaths:"[1]'`"
-    echo APV=$APV1 > $NEW
-    echo DOCKERIMAGE=$DOCKERIMAGE1 >> $NEW
-    echo SNAPSHOT=$SNAPSHOT1 >> $NEW
-
-    if [ -f $CURRENT ]; then
-        # Check: Update
-        if cmp -s $CURRENT $NEW; then
-            return
-        else
-            rm -f $CURRENT
-            cp $NEW $CURRENT
-            rm -f docker-compose.yml
-        fi
-    else
-        cp $NEW $CURRENT
-    fi
-}
-
 # Build: Compose File
 buildComposeFile() {
     COMPOSEFILE=docker-compose.yml
@@ -109,8 +82,7 @@ composeMain() {
     sL
     sTitle "Building docker-compose.yml"
     startSpinner "Writing docker-compose.yml:"
-    updateBuildParams
-    source buildparams.txt
+    cBuildParams
     
     if [ -f "docker-compose.yml" ]; then
         rm -f docker-compose.yml 

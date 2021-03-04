@@ -9,12 +9,12 @@ updateBuildParams() {
     NEW="new.buildparams.txt"
     BUILDPARAMS="https://download.nine-chronicles.com/apv.json"
 
-    APV="curl $BUILDPARAMS | jq '.apv'"
-    DOCKERIMAGE="curl $BUILDPARAMS | jq  '.docker'"
-    SNAPSHOT="`curl $BUILDPARAMS | jq '."snapshotPaths:"[1]'`"
-    echo APV=$APV > $NEW
-    echo DOCKERIMAGE=$DOCKERIMAGE >> $NEW
-    echo SNAPSHOT=$SNAPSHOT >> $NEW
+    APV1="`curl --silent $BUILDPARAMS | jq '.apv'`"
+    DOCKERIMAGE1="`curl --silent $BUILDPARAMS | jq  '.docker'`"
+    SNAPSHOT1="`curl --silent $BUILDPARAMS | jq '."snapshotPaths:"[1]'`"
+    echo APV=$APV1 > $NEW
+    echo DOCKERIMAGE=$DOCKERIMAGE1 >> $NEW
+    echo SNAPSHOT=$SNAPSHOT1 >> $NEW
 
     if [ -f $CURRENT ]; then
         # Check: Update

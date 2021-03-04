@@ -7,10 +7,15 @@ cSettings
 updateBuildParams() {
     CURRENT="buildparams.txt"
     NEW="new.buildparams.txt"
-    BUILDPARAMS="https://raw.githubusercontent.com/CryptoKasm/9c-swarm-miner/master/buildparams.txt"
-    
-    curl $BUILDPARAMS -s -o $NEW
-    
+    BUILDPARAMS="https://download.nine-chronicles.com/apv.json"
+
+    APV="curl $BUILDPARAMS | jq '.apv'"
+    DOCKERIMAGE="curl $BUILDPARAMS | jq  '.docker'"
+    SNAPSHOT="`curl $BUILDPARAMS | jq '."snapshotPaths:"[1]'`"
+    echo APV=$APV > $NEW
+    echo DOCKERIMAGE=$DOCKERIMAGE >> $NEW
+    echo SNAPSHOT=$SNAPSHOT >> $NEW
+
     if [ -f $CURRENT ]; then
         # Check: Update
         if cmp -s $CURRENT $NEW; then

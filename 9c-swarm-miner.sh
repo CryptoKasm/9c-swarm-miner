@@ -96,7 +96,7 @@ autoLog() {
     sLL
     sTitle "Auto Logging Filers: Mined a block | reorged | Append failed"
     export GREP_COLORS='ms=1;92'
-    docker-compose logs --tail=1000 -f | grep --color -i -E 'Mined a block|reorged|Append failed'
+    docker-compose logs --tail=1000 -f | grep --color -i -E 'Mined a block|reorged|mining|Append failed'
 }
 
 # Display Log Commands
@@ -111,13 +111,13 @@ displayLogCmds() {
     sTitle "Linux Monitor (Mined Blocks Only):"
     sAction "docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block'"
     sTitle "Linux Monitor (Mined/Reorg/Append failed events):"
-    sAction "docker-compose logs --tail=100 -f | grep --color -i -E 'Mined a block|reorged|Append failed'"
+    sAction "docker-compose logs --tail=100 -f | grep --color -i -E 'Mined a block|reorged|mining|Append failed'"
 }
 
 # Asks if user wants to start logging
 runLogging() {
     sSpacer
-    read -p "$(echo -e $S"> Would you like to run auto-logging ['Mined a block|reorged|Append failed'] (Y/n)?: "$RS)" optionLog
+    read -p "$(echo -e $S"> Would you like to run auto-logging ['Mined a block|reorge|mining|Append failed'] (Y/n)?: "$RS)" optionLog
     if [[ $optionLog == [yY] || $optionLog == [yY][eE][sS] ]]; then
         autoLog
     else

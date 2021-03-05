@@ -232,6 +232,8 @@ elif [ "$1" == "--check-gold" ]; then
     ./bin/graphql-query.sh --check-gold
 elif [ "$1" == "--send-logs" ]; then
     SendDockerLogs
+elif [ "$1" == "--vol-check" ]; then
+    ./bin/manage-snapshot.sh --volume
 else
     Main
     exit 0

@@ -112,6 +112,10 @@ displayLogCmds() {
     sAction "docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block'"
     sTitle "Linux Monitor (Mined/Reorg/Append failed events):"
     sAction "docker-compose logs --tail=100 -f | grep --color -i -E 'Mined a block|reorged|Append failed'"
+}
+
+# Asks if user wants to start logging
+runLogging() {
     sSpacer
     read -p "$(echo -e $S"> Would you like to run auto-logging ['Mined a block|reorged|Append failed'] (Y/n)?: "$RS)" optionLog
     if [[ $optionLog == [yY] || $optionLog == [yY][eE][sS] ]]; then
@@ -119,7 +123,6 @@ displayLogCmds() {
     else
         exit 0
     fi
-
 }
 
 # Update
@@ -194,6 +197,8 @@ Main() {
     checkSnapshot
     startDocker
     displayLogCmds
+    optionDonate
+    runLogging
 }
 ###############################
 if [ "$1" == "--setup" ]; then
@@ -204,6 +209,9 @@ elif [ "$1" == "--update" ]; then
     exit 0
 elif [ "$1" == "--stop" ]; then
     docker-compose stop
+    exit 0
+elif [ "$1" == "--donate" ]; then
+    displayDonate
     exit 0
 elif [ "$1" == "--perms" ]; then
     checkPermissions

@@ -58,7 +58,11 @@ refreshSnapshot() {
 # Test: Refresh if volume is missing
 testVol() {
     sLL
-    sTitle "Snapshot Management: $(cPlatform)"
+    sTitle "Volume Management: $(cPlatform)"
+    {
+    docker-compose up -d        # Restarts to recreate clean environment
+    } &> /dev/null
+
     for OUTPUT in $(docker ps -aqf "name=^9c-swarm-miner" --no-trunc)
         do
         Dname=$(docker ps -af "id=$OUTPUT" --format {{.Names}})
@@ -72,17 +76,22 @@ testVol() {
             sEntry "$Dname Snapshot Volumes are current!"
         fi
         done
-    sLL
+    {
+    docker-compose stop         # Stops cleaned environment for snapshot update
+    } &> /dev/null
 }
 
 # Test: Refresh if older than 2 hrs
 testAge() {
+    sLL
+    sTitle "Snapshot Management: $(cPlatform)"
     if [ -d "$NC_SNAPSHOT" ] && [ -f "$NC_SNAPZIP" ]; then
         sudo chmod -R 700 $NC_SNAPSHOT
         if [[ $(find "9c-main-snapshot.zip" -type f -mmin +60) ]]; then
             refreshSnapshot
         else
             sEntry "Snapshot is current!"
+            testVol
         fi
     else
         refreshSnapshot
@@ -98,8 +107,6 @@ forceRefresh() {
 
 ###############################
 snapshotMain() {
-    sLL
-    sTitle "Snapshot Management: $(cPlatform)"
     testAge
 }
 ###############################

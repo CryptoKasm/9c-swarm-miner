@@ -157,6 +157,33 @@ startDocker() {
     stopSpinner $?
 }
 
+# Send Docker Logs
+SendDockerLogs() {
+    sL
+    sTitle "Retriving Docker Logs and Emailing Support"
+    startSpinner "creating attachments:"
+    {
+        source settings.conf
+        Opath=$(pwd)/logs
+        Dcontainer=/var/lib/docker/containers
+        source settings.conf
+        find $Opath/$Dname.*.log -type f -mtime +3 -delete
+        for OUTPUT in $(docker ps -aqf "name=^9c-swarm-miner" --no-trunc)
+        do
+        Dname=$(docker ps -af "id=$OUTPUT" --format {{.Names}})
+        `sudo cat $Dcontainer/$OUTPUT/$OUTPUT-json.log | jq '.' > $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log`
+        #zip $Opath/emaildebug.$NC_PUBLIC_KEY.zip $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log
+        #rm $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log
+        done
+    } &> /dev/null
+    stopSpinner $?
+
+    #startSpinner "Creating Email & Sending To Development Team"
+    #echo "" | mail --append="FROM:$NC_PUBLIC_KEY@cryptokasm.io" -A $Opath/emaildebug.$NC_PUBLIC_KEY.zip -s "AutoLogs | 9c-swarm-miner | $NC_PUBLIC_KEY" support@cryptokasm.io -F '$NC_PUBLIC_KEY'
+    #rm $Opath/emaildebug.$NC_PUBLIC_KEY.zip
+    #stopSpinner $?
+}
+
 ###############################
 Main() {
     sIntro
@@ -192,6 +219,8 @@ elif [ "$1" == "--clean-all" ]; then
     clean "2"
 elif [ "$1" == "--check-gold" ]; then
     ./bin/graphql-query.sh --check-gold
+elif [ "$1" == "--send-logs" ]; then
+    SendDockerLogs
 else
     Main
     exit 0

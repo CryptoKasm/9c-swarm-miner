@@ -57,6 +57,8 @@ refreshSnapshot() {
 
 # Test: Refresh if volume is missing
 testVol() {
+    sLL
+    sTitle "Snapshot Management: $(cPlatform)"
     for OUTPUT in $(docker ps -aqf "name=^9c-swarm-miner" --no-trunc)
         do
         Dname=$(docker ps -af "id=$OUTPUT" --format {{.Names}})
@@ -70,6 +72,7 @@ testVol() {
             sEntry "$Dname Snapshot Volumes are current!"
         fi
         done
+    sLL
 }
 
 # Test: Refresh if older than 2 hrs
@@ -98,11 +101,13 @@ snapshotMain() {
     sLL
     sTitle "Snapshot Management: $(cPlatform)"
     testAge
-    testVol
 }
 ###############################
 if [ "$1" == "--force" ]; then
     forceRefresh
+    exit 0
+elif [ "$1" == "--volume" ]; then
+    testVol
     exit 0
 else
     snapshotMain

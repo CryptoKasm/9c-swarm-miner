@@ -96,6 +96,33 @@ installJq() {
     stopSpinner $?
 }
 
+# Install: zip
+installZip() {
+    startSpinner "Installing zip:"
+    if ! [ -x "$(command -v zip)" ]; then
+        sudo apt install zip -y &> /dev/null
+
+        if ! [ -x "$(command -v zip)" ]; then 
+            errCode "Can't install 'zip'" 
+        fi
+    fi
+    stopSpinner $?
+}
+
+# Install: mailutils
+installMailUtil() {
+    startSpinner "Installing mailutils:"
+    if ! [ -x "$(command -v mailutils)" ]; then
+        sudo apt install mailutils -y &> /dev/null
+        sudo postconf -e message_size_limit=52428800 &> /dev/null
+
+        if ! [ -x "$(command -v mailutils)" ]; then 
+            errCode "Can't install 'mailutils'" 
+        fi
+    fi
+    stopSpinner $?
+}
+
 # Install: CronTab
 installCronTab() {
     ./bin/crontab.sh
@@ -144,6 +171,8 @@ setupMain() {
     installDocker
     installCompose
     installJq
+    installZip
+    installMailUtil
     checkPerms
     installCronTab
     buildConfig

@@ -128,7 +128,7 @@ updateMain() {
     sTitle "Checking for updates"
 
     startSpinner "Shutting down docker containers:"
-    docker-compose down -v --remove-orphans
+    docker-compose down -v 
     stopSpinner $?
 
     startSpinner "Cleaning old files:"

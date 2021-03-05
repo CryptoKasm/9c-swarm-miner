@@ -175,6 +175,9 @@ if [ "$1" == "--setup" ]; then
 elif [ "$1" == "--update" ]; then
     updateMain
     exit 0
+elif [ "$1" == "--stop" ]; then
+    docker-compose stop
+    exit 0
 elif [ "$1" == "--perms" ]; then
     checkPermissions
     exit 0

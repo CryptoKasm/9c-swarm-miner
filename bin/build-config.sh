@@ -6,13 +6,14 @@ defaultOptions() {
     NC_1='0'
     NC_2='debug'
     NC_3="$NCPK"
-    NC_4=''
+    NC_4="$NCPLK"
     NC_5='1'
     NC_6='6144M'
     NC_7='2048M'
     NC_8='1'
     NC_9='0'
     NC_10='1'
+    NC_11='1'
 }
 
 # Write: settings.conf
@@ -52,6 +53,9 @@ NC_CRONJOB_AUTO_RESTART=$NC_9
 
 # Enable GraphQL Query Commands
 NC_GRAPHQL_QUERIES=$NC_10
+
+#Enable Emailing to Support Team (0 OFF)
+NC_EMAIL=$NC_11
 EOF
 
     fi
@@ -74,6 +78,7 @@ rebuildConfig() {
         NC_8="$NC_REFRESH_SNAPSHOT"
         NC_9="$NC_CRONJOB_AUTO_RESTART"
         NC_10="$NC_GRAPHQL_QUERIES"
+        NC_11="$NC_EMAIL"
 
         writeConfig
 
@@ -98,6 +103,9 @@ configMain() {
     sTitle "Building settings.conf"
     sAction "Please enter the requested information or press enter and edit later!"
     sAction "Edit configuration file after creation: settings.conf"
+    sSpacer
+    read -p "$(echo -e $P"|$sB PUBLIC_KEY: "$RS)" NCPLK
+    sSpacer
     sSpacer
     read -p "$(echo -e $P"|$sB SECRET_KEY: "$RS)" NCPK
     sSpacer

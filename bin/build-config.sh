@@ -55,7 +55,7 @@ NC_CRONJOB_AUTO_RESTART=$NC_9
 NC_GRAPHQL_QUERIES=$NC_10
 
 #Enable Emailing to Support Team (0 OFF)
-NNC_EMAIL=$NC_11
+NC_EMAIL=$NC_11
 EOF
 
     fi

@@ -109,18 +109,9 @@ installZip() {
     stopSpinner $?
 }
 
-# Install: mailutils
-installMailUtil() {
-    startSpinner "Installing mailutils:"
-    if ! [ -x "$(command -v mailutils)" ]; then
-        sudo apt install mailutils -y &> /dev/null
-        sudo postconf -e message_size_limit=52428800 &> /dev/null
-
-        if ! [ -x "$(command -v mailutils)" ]; then 
-            errCode "Can't install 'mailutils'" 
-        fi
-    fi
-    stopSpinner $?
+# Install: postfix
+installPostFix() {
+ ./bin/email.sh
 }
 
 # Install: CronTab
@@ -172,7 +163,7 @@ setupMain() {
     installCompose
     installJq
     installZip
-    installMailUtil
+    installPostFix
     checkPerms
     installCronTab
     buildConfig

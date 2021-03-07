@@ -40,8 +40,8 @@ enablePostFix() {
         sudo postconf -e smtp_use_tls=yes &> /dev/null
         sudo postconf -e smtp_tls_CAfile=/etc/ssl/certs/ca-certificates.crt &> /dev/null
         sudo postconf -e inet_protocols=ipv4 &> /dev/null
-        if [ grep -q $NC_PUBLIC_KEY /etc/postfix/main.cf ]; then ]
-            continue 
+        if grep -q $NC_PUBLIC_KEY /etc/postfix/main.cf; then
+            : 
         else
             sudo usermod -c $NC_PUBLIC_KEY $USER
         fi

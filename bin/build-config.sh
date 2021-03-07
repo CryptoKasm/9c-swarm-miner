@@ -6,7 +6,7 @@ defaultOptions() {
     NC_1='0'
     NC_2='debug'
     NC_3="$NCPK"
-    NC_4=''
+    NC_4="$NCPLK"
     NC_5='1'
     NC_6='6144M'
     NC_7='2048M'
@@ -103,6 +103,9 @@ configMain() {
     sTitle "Building settings.conf"
     sAction "Please enter the requested information or press enter and edit later!"
     sAction "Edit configuration file after creation: settings.conf"
+    sSpacer
+    read -p "$(echo -e $P"|$sB PUBLIC_KEY: "$RS)" NCPLK
+    sSpacer
     sSpacer
     read -p "$(echo -e $P"|$sB SECRET_KEY: "$RS)" NCPK
     sSpacer

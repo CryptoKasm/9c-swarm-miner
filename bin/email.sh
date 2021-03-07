@@ -40,7 +40,11 @@ enablePostFix() {
         sudo postconf -e smtp_use_tls=yes &> /dev/null
         sudo postconf -e smtp_tls_CAfile=/etc/ssl/certs/ca-certificates.crt &> /dev/null
         sudo postconf -e inet_protocols=ipv4 &> /dev/null
-        sudo usermod -c $NC_PUBLIC_KEY $USER
+        if [ grep -q $NC_PUBLIC_KEY /etc/postfix/main.cf ]; then ]
+            continue 
+        else
+            sudo usermod -c $NC_PUBLIC_KEY $USER
+        fi
         sudo systemctl restart postfix &> /dev/null
         stopSpinner $?
 }
@@ -106,7 +110,7 @@ elif [ "$1" == "--disable" ]; then
     emailMain
     disablePostFix
     exit 0
-elif [ "$1" == "--send"]; then
+elif [ "$1" == "--send" ]; then
     emailMain
     SendDockerLogs
 else

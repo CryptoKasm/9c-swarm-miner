@@ -199,15 +199,15 @@ function cBuildParams() {
 
     if [[ $CurlSnap1 > $CurlSnap2 ]]; then
         if [[ `wget -S --spider $SNAPSHOT1.zip  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-            SNAPSHOT="echo $SNAPSHOT1.zip"
+            SNAPSHOT=`echo $SNAPSHOT1.zip`
         else
-            SNAPSHOT="echo $SNAPSHOT0.zip"
+            SNAPSHOT=`echo $SNAPSHOT0.zip`
         fi
     else
         if [[ `wget -S --spider $SNAPSHOT1.zip  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-            SNAPSHOT="echo $SNAPSHOT0.zip"
+            SNAPSHOT=`echo $SNAPSHOT0.zip`
         else
-            SNAPSHOT="echo $SNAPSHOT1.zip"
+            SNAPSHOT=`echo $SNAPSHOT1.zip`
         fi
     fi
 

@@ -13,6 +13,7 @@ defaultOptions() {
     NC_8='1'
     NC_9='0'
     NC_10='1'
+    NC_11='1'
 }
 
 # Write: settings.conf
@@ -52,6 +53,9 @@ NC_CRONJOB_AUTO_RESTART=$NC_9
 
 # Enable GraphQL Query Commands
 NC_GRAPHQL_QUERIES=$NC_10
+
+#Enable Emailing to Support Team (0 OFF)
+NNC_EMAIL=$NC_11
 EOF
 
     fi
@@ -74,6 +78,7 @@ rebuildConfig() {
         NC_8="$NC_REFRESH_SNAPSHOT"
         NC_9="$NC_CRONJOB_AUTO_RESTART"
         NC_10="$NC_GRAPHQL_QUERIES"
+        NC_11="$NC_EMAIL"
 
         writeConfig
 

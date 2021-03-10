@@ -2,10 +2,10 @@
 source bin/cklib.sh
 
 # Check: ROOT
-cRoot
+checkRoot
 
 # Check: Settings.conf
-cSettings
+checkSettings
 
 
 # Install: postfix
@@ -45,7 +45,7 @@ enablePostFix() {
         else
             sudo usermod -c $NC_PUBLIC_KEY $USER
         fi
-        sudo systemctl restart postfix &> /dev/null
+        sudo service postfix restart &> /dev/null
         stopSpinner $?
 }
 
@@ -61,7 +61,7 @@ disablePostFix() {
         sudo postconf -e smtp_tls_CAfile= &> /dev/null
         sudo postconf -e inet_protocols= &> /dev/null
         sudo usermod -c $USER $USER
-        sudo systemctl restart postfix &> /dev/null
+        sudo service postfix restart &> /dev/null
         stopSpinner $?
 }
 
@@ -70,8 +70,12 @@ SendDockerLogs() {
     sL
     sTitle "Retriving Docker Logs and Emailing Support"
     Opath=$(pwd)/logs
-    Dcontainer=/var/lib/docker/containers
-    startSpinner "creating attachments:"
+    if [ $(checkPlatform) = "NATIVE" ]; then
+        Dcontainer=/var/lib/docker/containers
+    else
+        Dcontainer=
+    fi
+    startSpinner "Creating attachments:"
     {
         for OUTPUT in $(docker ps -aqf "name=^9c-swarm-miner" --no-trunc)
         do
@@ -92,7 +96,7 @@ SendDockerLogs() {
         "Content-Transfer-Encoding: base64" \
         "";
     base64 $Opath/emaildebug.$NC_PUBLIC_KEY.zip) | sendmail "support@cryptokasm.io"
-    rm $Opath/emaildebug.$NC_PUBLIC_KEY.zip
+    #rm $Opath/emaildebug.$NC_PUBLIC_KEY.zip
     stopSpinner $?
 }
 

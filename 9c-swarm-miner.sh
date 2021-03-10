@@ -2,7 +2,7 @@
 source bin/cklib.sh
 
 # Check: ROOT
-cRoot
+checkRoot
 
 # Set permissions for this project
 checkPermissions() {
@@ -79,6 +79,7 @@ clean() {
         sudo rm -rf latest-snapshot
         sudo rm -f 9c-main-snapshot.zip
         sudo rm -rf logs
+        sudo rm -rf vault
     elif [[ "$1" == "2" ]]; then
         sudo rm -f docker-compose.yml
         sudo rm -f settings.conf
@@ -94,7 +95,7 @@ clean() {
 # Autostart: Logging Docker Containers
 autoLog() {
     sLL
-    sTitle "Auto Logging Filers: Mined a block | reorged | Append failed"
+    sTitle "Auto Logging Filters: Mined a block | reorged | mining | Append failed"
     export GREP_COLORS='ms=1;92'
     docker-compose logs --tail=1000 -f | grep --color -i -E 'Mined a block|reorged|mining|Append failed'
 }
@@ -117,7 +118,7 @@ displayLogCmds() {
 # Asks if user wants to start logging
 runLogging() {
     sSpacer
-    read -p "$(echo -e $S"> Would you like to run auto-logging ['Mined a block|reorge|mining|Append failed'] (Y/n)?: "$RS)" optionLog
+    read -p "$(echo -e $P">$S Would you like to run auto-logging ['Mined a block|reorge|mining|Append failed'] (Y/n)?: "$RS)" optionLog
     if [[ $optionLog == [yY] || $optionLog == [yY][eE][sS] ]]; then
         autoLog
     else
@@ -131,7 +132,7 @@ updateMain() {
     sTitle "Checking for updates"
 
     startSpinner "Shutting down docker containers:"
-    docker-compose down -v 
+    docker-compose down -v &> /dev/null
     stopSpinner $?
 
     startSpinner "Cleaning old files:"
@@ -146,7 +147,7 @@ updateMain() {
 
     ./bin/build-config.sh --update
 
-    ./bin/setup.sh --perms
+    ./bin/setup.sh --update
 }
 
 # Start Docker Containers
@@ -191,7 +192,7 @@ elif [ "$1" == "--update" ]; then
     updateMain
     exit 0
 elif [ "$1" == "--stop" ]; then
-    docker-compose stop
+    docker-compose down -v
     exit 0
 elif [ "$1" == "--donate" ]; then
     displayDonate
@@ -217,6 +218,8 @@ elif [ "$1" == "--send-logs" ]; then
     ./bin/email.sh --send
 elif [ "$1" == "--vol-check" ]; then
     ./bin/manage-snapshot.sh --volume
+elif [ "$1" == "--logging" ]; then
+    displayLogCmds
 else
     Main
     exit 0

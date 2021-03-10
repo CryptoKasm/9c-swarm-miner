@@ -2,13 +2,13 @@
 source bin/cklib.sh
 
 # Check: ROOT
-cRoot
+checkRoot
 
 # Check: Settings
-cSettings
+checkSettings
 
 # Check: Build Params
-cBuildParams
+checkBuildParams
 
 # Set: Variables
 NC_SNAPDIR="latest-snapshot"
@@ -57,8 +57,8 @@ refreshSnapshot() {
 
 # Test: Refresh if volume is missing
 testVol() {
-    sLL
-    sTitle "Volume Management: $(cPlatform)"
+    sL
+    sTitle "Volume Management: $(checkPlatform)"
     {
     docker-compose up -d        # Restarts to recreate clean environment
     } &> /dev/null
@@ -83,8 +83,8 @@ testVol() {
 
 # Test: Refresh if older than 2 hrs
 testAge() {
-    sLL
-    sTitle "Snapshot Management: $(cPlatform)"
+    sL
+    sTitle "Snapshot Management: $(checkPlatform)"
     if [ -d "$NC_SNAPSHOT" ] && [ -f "$NC_SNAPZIP" ]; then
         sudo chmod -R 700 $NC_SNAPSHOT
         if [[ $(find "9c-main-snapshot.zip" -type f -mmin +60) ]]; then
@@ -99,8 +99,8 @@ testAge() {
 }
 
 forceRefresh() {
-    sLL
-    sTitle "Snapshot Management: $(cPlatform)"
+    sL
+    sTitle "Snapshot Management: $(checkPlatform)"
     refreshSnapshot
     sLL
 }

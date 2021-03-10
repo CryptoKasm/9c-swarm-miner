@@ -109,7 +109,7 @@ sIntro() {
     echo -e $P"|$S  \______  /|__|   / ____||   __/|__|  \____/|____|__ (____  /____  >__|_|  / "
     echo -e $P"|$S         \/        \/     |__|                       \/    \/     \/      \/  "
     echo -e $P"+-----------------------------------------------------------------------------+"
-    echo -e $P"|$S Project: $Project   $P|$S Version: $Version   $P|$S Platform: $(cPlatform)"
+    echo -e $P"|$S Project: $Project   $P|$S Version: $Version   $P|$S Platform: $(checkPlatform)"
     echo -e $P"+-----------------------------------------------------------------------------+"$RS
 }
 sTitle() {
@@ -157,7 +157,7 @@ function errCode()
 }
 
 #| Check: ROOT
-function cRoot() { 
+function checkRoot() { 
     debug "Check: ROOT"
     if [ "$EUID" -ne 0 ]; then
         sudo echo -ne "\r"
@@ -166,7 +166,7 @@ function cRoot() {
 }
 
 #| Check: Platform
-function cPlatform() {
+function checkPlatform() {
     debug "Check: Platform"
     if grep -q icrosoft /proc/version; then
         PLATFORM="WSL"
@@ -178,7 +178,7 @@ function cPlatform() {
 }
 
 #| Check: Settings
-function cSettings() {
+function checkSettings() {
     if [ -f "settings.conf" ]; then
         source settings.conf
     else
@@ -188,7 +188,7 @@ function cSettings() {
 }
 
 #| Check: Build Params
-function cBuildParams() {
+function checkBuildParams() {
     BUILDPARAMS="https://download.nine-chronicles.com/apv.json"
     APV=`curl --silent $BUILDPARAMS | jq -r '.apv'`
     DOCKERIMAGE=`curl --silent $BUILDPARAMS | jq -r '.docker'`
@@ -214,9 +214,10 @@ function cBuildParams() {
 }
 
 function optionDonate() {
-    sL
+    sLL
     sTitle "Feel like making a small donation?"
-    echo -e $C"> You can do so by running the command: ./9c-swarm-miner.sh --donate"$RS
+    sEntry "CryptoKasm Public ID:$C 0xc17fC5cC7df1757D656B2431B3621b42E556B523$RS"
+    #echo -e $P">$C You can do so by running the command: ./9c-swarm-miner.sh --donate"$RS
 }
 
 function displayDonate() {
@@ -247,8 +248,8 @@ function ckMain() {
     #sIntro
     #sTitle "Setup"
     #sEntry "curl..."
-    #cRoot
-    #cPlatform
+    #checkRoot
+    #checkPlatform
     #startSpinner "Testing: Spinner"
     #sleep 5
     #stopSpinner $?

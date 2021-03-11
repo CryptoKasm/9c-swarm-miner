@@ -75,7 +75,7 @@ SendDockerLogs() {
         Dname=$(docker ps -af "id=$OUTPUT" --format {{.Names}})
         docker logs 9c-swarm-miner_swarm-miner1_1 > ~/miner.log > $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log
         zip $Opath/emaildebug.$NC_PUBLIC_KEY.zip $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log
-        #rm $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log
+        rm $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log
     
     } &> /dev/null
     stopSpinner $?

@@ -115,10 +115,16 @@ configMain() {
     stopSpinner $?
 }
 ###############################
-if [ "$1" == "--update" ]; then
-    updateConfig
+case $1 in
+
+  --update)
+    forceRefresh
     exit 0
-else
+    ;;
+
+  *)
     configMain
     exit 0
-fi
+    ;;
+
+esac

@@ -185,42 +185,83 @@ Main() {
     runLogging
 }
 ###############################
-if [ "$1" == "--setup" ]; then
-    ./bin/setup.sh
+case $1 in
+
+  --start)
+    docker-compose up -d
     exit 0
-elif [ "$1" == "--update" ]; then
-    updateMain
-    exit 0
-elif [ "$1" == "--stop" ]; then
+    ;;
+
+  --stop)
     docker-compose stop
     exit 0
-elif [ "$1" == "--donate" ]; then
-    #displayDonate
+    ;;
+    
+  --update)
+    updateMain
     exit 0
-elif [ "$1" == "--perms" ]; then
+    ;;
+ 
+  --setup)
+    ./bin/setup.sh
+    exit 0
+    ;;
+ 
+  --refresh)
+    ./bin/manage-snapshot.sh
+    exit 0
+    ;;
+ 
+  --force-refresh)
+    ./bin/manage-snapshot.sh --force
+    exit 0
+    ;;
+ 
+  --clean)
+    clean "1"
+    exit 0
+    ;;
+ 
+  --clean-all)
+    clean "2"
+    exit 0
+    ;;
+ 
+  --check-vol)
+    ./bin/manage-snapshot.sh --volume
+    exit 0
+    ;;
+  
+  --check-permissions)
     checkPermissions
     exit 0
-elif [ "$1" == "--crontab" ]; then
+    ;;
+
+  --logging)
+    displayLogCmds
+    exit 0
+    ;;
+ 
+  --crontab)
     docker-compose stop
     bin/manage-snapshot.sh
     docker-compose up -d
-elif [ "$1" == "--refresh" ]; then
-    ./bin/manage-snapshot.sh
-elif [ "$1" == "--force-refresh" ]; then
-    ./bin/manage-snapshot.sh --force
-elif [ "$1" == "--clean" ]; then
-    clean "1"
-elif [ "$1" == "--clean-all" ]; then
-    clean "2"
-elif [ "$1" == "--check-gold" ]; then
-    ./bin/graphql-query.sh --check-gold
-elif [ "$1" == "--send-logs" ]; then
+    exit 0
+    ;;
+ 
+  --send-logs)
     ./bin/email.sh --send
-elif [ "$1" == "--vol-check" ]; then
-    ./bin/manage-snapshot.sh --volume
-elif [ "$1" == "--logging" ]; then
-    displayLogCmds
-else
+    exit 0
+    ;;
+ 
+  --check-gold)
+    ./bin/graphql-query.sh --check-gold
+    exit 0
+    ;;
+ 
+  *)
     Main
     exit 0
-fi
+    ;;
+
+esac

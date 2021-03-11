@@ -14,6 +14,7 @@
 - **Linux Users: Please skip down to [Section 2](#Linux) to begin install.**
 - **Windows Users: MAKE SURE TO START DOCKER, before continuing to [Section 2](#Linux).**
 - <span style="color:red">**Some anti-virus software may flag the miner as malicious, please add an exception or disable and retry before contacting support.**</span>
+- <span style="color:red">**Those upgrading to v1.6.2-beta, MAKE SURE TO RUN BOTH COMMANDS: git pull && ./9c-swarm-miner.sh --update**</span>
 #
 <br>
 

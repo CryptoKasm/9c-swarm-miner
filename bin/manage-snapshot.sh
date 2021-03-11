@@ -112,6 +112,7 @@ testAge() {
     fi
 }
 
+# Force refresh of snapshot
 forceRefresh() {
     sL
     sTitle "Snapshot Management: $(checkPlatform)"
@@ -124,16 +125,26 @@ snapshotMain() {
     testAge
 }
 ###############################
-if [ "$1" == "--force" ]; then
+case $1 in
+
+  --force)
     forceRefresh
     exit 0
-elif [ "$1" == "--volume" ]; then
+    ;;
+
+  --volume)
     testVol
     exit 0
-elif [ "$1" == "--running" ]; then
+    ;;
+
+  --running)
     testDockerRunning
     exit 0
-else
+    ;;
+
+  *)
     snapshotMain
     exit 0
-fi
+    ;;
+
+esac

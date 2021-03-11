@@ -1,6 +1,7 @@
 #!/bin/bash
 source bin/cklib.sh
 
+# Check: Settings.conf
 checkSettings
 
 # Build: Compose File

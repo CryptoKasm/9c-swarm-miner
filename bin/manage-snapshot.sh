@@ -55,7 +55,7 @@ refreshSnapshot() {
     cd latest-snapshot
     curl -# -O $SNAPSHOT &> /dev/null
     unzip 9c-main-snapshot.zip &> /dev/null
-    sudo chmod -R 700 $NC_SNAPDIR
+    sudo chmod -R 700 .
     mv 9c-main-snapshot.zip ../
     stopSpinner $?
     copyVolume

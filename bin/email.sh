@@ -68,9 +68,9 @@ disablePostFix() {
 # Send: Email
 SendDockerLogs() {
     sL
-    sTitle "Retriving Docker Logs and Emailing Support"
-    Opath=$(pwd)/logs
-    startSpinner "Creating attachments:"
+    sTitle "Sending Docker Logs To Support"
+    Opath="$(pwd)/logs"
+    startSpinner "Gathering docker logs:"
     {
         Dname=$(docker ps -af "id=$OUTPUT" --format {{.Names}})
         docker logs 9c-swarm-miner_swarm-miner1_1 > ~/miner.log > $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log
@@ -80,7 +80,7 @@ SendDockerLogs() {
     } &> /dev/null
     stopSpinner $?
 
-    startSpinner "Creating Email & Sending To Development Team"
+    startSpinner "Creating email & sending to development team"
     (printf "%s\n" \
         "Subject: AutoLogs | 9c-swarm-miner | $NC_PUBLIC_KEY" \
         "To: support@cryptokasm.io" \

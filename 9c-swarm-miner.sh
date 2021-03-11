@@ -192,10 +192,10 @@ elif [ "$1" == "--update" ]; then
     updateMain
     exit 0
 elif [ "$1" == "--stop" ]; then
-    docker-compose down -v
+    docker-compose stop
     exit 0
 elif [ "$1" == "--donate" ]; then
-    displayDonate
+    #displayDonate
     exit 0
 elif [ "$1" == "--perms" ]; then
     checkPermissions

@@ -88,6 +88,13 @@ testVol() {
     } &> /dev/null
 }
 
+# Test: Ignore Volume test if docker containers are running
+testDockerRunning() {
+    if [ ! "$(docker ps -qf "name=^9c-swarm-miner")" ]; then
+        testVol
+    fi
+}
+
 # Test: Refresh if older than 2 hrs
 testAge() {
     sL
@@ -98,7 +105,7 @@ testAge() {
             refreshSnapshot
         else
             sEntry "Snapshot is current!"
-            testVol
+            testDockerRunning
         fi
     else
         refreshSnapshot
@@ -122,6 +129,9 @@ if [ "$1" == "--force" ]; then
     exit 0
 elif [ "$1" == "--volume" ]; then
     testVol
+    exit 0
+elif [ "$1" == "--running" ]; then
+    testDockerRunning
     exit 0
 else
     snapshotMain

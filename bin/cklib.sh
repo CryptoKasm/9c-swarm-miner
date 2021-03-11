@@ -1,11 +1,11 @@
 #!/bin/bash
 
 Debug=0
-Version="1.5.1-alpha"
+Version="1.6.2-beta"
 Project="9c-swarm-miner"
 
 #+---------------------------------------------+#
-#| CryptoKasm Bash Library                     |#
+#| CryptoKasm Bash Library
 #+---------------------------------------------+#
 #| Color Styles
 Yellow="\e[33m"
@@ -20,7 +20,7 @@ RSL3="\e[3A\e["
 sB="\e[1m"
 
 #+-------------------------
-#| Color Scheme
+# Color Scheme
 P=$sB$Yellow
 S=$sB$Cyan
 T=$sB$Magenta
@@ -28,7 +28,7 @@ C=$sB$Green
 F=$sB$Red
 
 #+-------------------------
-#| Spinner
+# Spinner
 function _spinner() {
     # $1 start/stop
     #
@@ -99,7 +99,7 @@ function stopSpinner {
 }
 
 #+-------------------------
-#| Console Text Styles
+# Console Text Styles
 sIntro() {
     echo -e $P"+-----------------------------------------------------------------------------+"
     echo -e $P"|$S _________                        __          ____  __.                       "
@@ -141,14 +141,14 @@ sGraphQL() {
     echo -e $P"|$T   $1"$RS
 }
 #+---------------------------------------------+#
-#| Functions                                   |#
+# Functions
 #+---------------------------------------------+#
-#| Check: Debugging
+# Check: Debugging
 function debug() {
     if [ "$Debug" == 1 ]; then echo "$1"; fi
 }
 
-#| Exit: Error with Code (check Docs for ErrorCodes )
+# Exit: Error with Code (check Docs for ErrorCodes )
 function errCode()
 {
   echo -e $F">Error: $1"$RS 1>&2
@@ -156,7 +156,7 @@ function errCode()
   exit 1
 }
 
-#| Check: ROOT
+# Check: ROOT
 function checkRoot() { 
     debug "Check: ROOT"
     if [ "$EUID" -ne 0 ]; then
@@ -165,7 +165,7 @@ function checkRoot() {
     debug "Check: ROOT > $EUID"
 }
 
-#| Check: Platform
+# Check: Platform
 function checkPlatform() {
     debug "Check: Platform"
     if grep -q icrosoft /proc/version; then
@@ -177,7 +177,7 @@ function checkPlatform() {
     echo $PLATFORM
 }
 
-#| Check: Settings
+# Check: Settings
 function checkSettings() {
     if [ -f "settings.conf" ]; then
         source settings.conf
@@ -187,7 +187,7 @@ function checkSettings() {
     fi
 }
 
-#| Check: Build Params
+# Check: Build Params
 function checkBuildParams() {
     BUILDPARAMS="https://download.nine-chronicles.com/apv.json"
     APV=`curl --silent $BUILDPARAMS | jq -r '.apv'`

@@ -18,6 +18,11 @@ NC_SNAPZIP="9c-main-snapshot.zip"
 # Copy: Snapshot to Volumes
 copyVolume(){
     startSpinner "Copying snapshot to miners:"
+    {
+    docker-compose up -d        # Restarts to recreate clean environment
+    docker-compose stop         # Stops cleaned environment for snapshot update
+    } &> /dev/null
+
     for ((i=1; i<=$NC_MINERS; i++)); do
         # NOTE: The location and the name of the docker volumes may differ, depending on the system.
         {
@@ -60,7 +65,8 @@ testVol() {
     sL
     sTitle "Volume Management: $(checkPlatform)"
     {
-    docker-compose up -d        # Restarts to recreate clean environment
+    docker-compose up -d       # Restarts to recreate clean environment
+    docker-compose stop
     } &> /dev/null
 
     for OUTPUT in $(docker ps -aqf "name=^9c-swarm-miner" --no-trunc)

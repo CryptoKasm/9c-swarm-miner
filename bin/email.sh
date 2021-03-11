@@ -70,20 +70,13 @@ SendDockerLogs() {
     sL
     sTitle "Retriving Docker Logs and Emailing Support"
     Opath=$(pwd)/logs
-    if [ $(checkPlatform) = "NATIVE" ]; then
-        Dcontainer=/var/lib/docker/containers
-    else
-        Dcontainer=
-    fi
     startSpinner "Creating attachments:"
     {
-        for OUTPUT in $(docker ps -aqf "name=^9c-swarm-miner" --no-trunc)
-        do
         Dname=$(docker ps -af "id=$OUTPUT" --format {{.Names}})
-        `sudo cat $Dcontainer/$OUTPUT/$OUTPUT-json.log | jq '.' > $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log`
+        docker logs 9c-swarm-miner_swarm-miner1_1 > ~/miner.log > $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log
         zip $Opath/emaildebug.$NC_PUBLIC_KEY.zip $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log
-        rm $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log
-        done
+        #rm $Opath/$Dname.$(date +"%Y_%m_%d_%I_%M_%p").log
+    
     } &> /dev/null
     stopSpinner $?
 
@@ -96,7 +89,7 @@ SendDockerLogs() {
         "Content-Transfer-Encoding: base64" \
         "";
     base64 $Opath/emaildebug.$NC_PUBLIC_KEY.zip) | sendmail "support@cryptokasm.io"
-    #rm $Opath/emaildebug.$NC_PUBLIC_KEY.zip
+    rm $Opath/emaildebug.$NC_PUBLIC_KEY.zip
     stopSpinner $?
 }
 

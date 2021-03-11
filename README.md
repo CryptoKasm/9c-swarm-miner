@@ -166,7 +166,12 @@ NC_GRAPHQL_QUERIES=1
 ./9c-swarm-miner.sh --check-gold
 ```
 
-
+***Update***
+```bash
+# To update run these commands from the 9c-swarm-miner directory
+git pull
+./9c-swarm-miner.sh --update
+```
 
 <br>
 

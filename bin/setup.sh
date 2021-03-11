@@ -2,7 +2,7 @@
 source bin/cklib.sh
 
 #| Check: ROOT
-cRoot
+checkRoot
 
 # Install: Curl
 installCurl() {
@@ -34,7 +34,7 @@ installUnzip() {
 installDocker() {
     startSpinner "Installing docker:"
     if ! [ -x "$(command -v docker)" ]; then
-        if [ $(cPlatform) = "NATIVE" ]; then
+        if [ $(checkPlatform) = "NATIVE" ]; then
             # Removing leftovers if Docker is not found
             {
             sudo apt remove --yes docker docker-engine docker.io containerd runc
@@ -96,6 +96,24 @@ installJq() {
     stopSpinner $?
 }
 
+# Install: zip
+installZip() {
+    startSpinner "Installing zip:"
+    if ! [ -x "$(command -v zip)" ]; then
+        sudo apt install zip -y &> /dev/null
+
+        if ! [ -x "$(command -v zip)" ]; then 
+            errCode "Can't install 'zip'" 
+        fi
+    fi
+    stopSpinner $?
+}
+
+# Install: postfix
+installPostFix() {
+ ./bin/email.sh
+}
+
 # Install: CronTab
 installCronTab() {
     ./bin/crontab.sh
@@ -103,7 +121,12 @@ installCronTab() {
 
 # Build: Settings.conf
 buildConfig() {
-    ./bin/build-config.sh
+    if [ -f "settings.conf" ]; then
+        sEntry "Found settings.conf"
+        source settings.conf
+    else
+        ./bin/build-config.sh
+    fi
 }
 
 # Build: docker-compose.yml
@@ -124,6 +147,7 @@ checkPerms() {
     if [ -f bin/crontab.sh ]; then chmod +x bin/crontab.sh; fi
     if [ -f bin/cklib.sh ]; then chmod +x bin/cklib.sh; fi
     if [ -f bin/graphql-query.sh ]; then chmod +x bin/graphql-query.sh; fi
+    if [ -f bin/email.sh ]; then chmod +x bin/email.sh; fi
     if [ -f /usr/local/bin/docker-compose ]; then sudo chmod +x /usr/local/bin/docker-compose; fi
     stopSpinner $?
 }
@@ -135,28 +159,43 @@ checkAptUpdate() {
     stopSpinner $?
 }
 
+relogginText() {
+    sLL
+    sTitle "Log out and then log in to complete the setup! Then re-run this script!"
+    echo
+}
+
+updateText() {
+    sLL
+    sTitle "Update complete!"
+    echo
+}
 ###############################
 setupMain() {
-    sTitle "Initiating Setup for $(cPlatform)"
+    sTitle "Initiating Setup for $(checkPlatform)"
     checkAptUpdate
     installCurl
     installUnzip
     installDocker
     installCompose
     installJq
+    installZip
+    installPostFix
     checkPerms
     installCronTab
     buildConfig
     buildCompose
-    sLL
-    sTitle "Log out and then log in to complete the setup! Then re-run this script!"
-    echo
 }
 ###############################
-if [ "$1" == "--perms" ]; then
+if [ "$1" == "--update" ]; then
+    setupMain
+    updateText
+    exit 0
+elif [ "$1" == "--perms" ]; then
     checkPerms
     exit 0
 else
     setupMain
+    relogginText
     exit 0
 fi

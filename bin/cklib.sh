@@ -1,11 +1,11 @@
 #!/bin/bash
 
 Debug=0
-Version="1.5.1-alpha"
+Version="1.6.2-beta"
 Project="9c-swarm-miner"
 
 #+---------------------------------------------+#
-#| CryptoKasm Bash Library                     |#
+#| CryptoKasm Bash Library
 #+---------------------------------------------+#
 #| Color Styles
 Yellow="\e[33m"
@@ -20,7 +20,7 @@ RSL3="\e[3A\e["
 sB="\e[1m"
 
 #+-------------------------
-#| Color Scheme
+# Color Scheme
 P=$sB$Yellow
 S=$sB$Cyan
 T=$sB$Magenta
@@ -28,7 +28,7 @@ C=$sB$Green
 F=$sB$Red
 
 #+-------------------------
-#| Spinner
+# Spinner
 function _spinner() {
     # $1 start/stop
     #
@@ -99,7 +99,7 @@ function stopSpinner {
 }
 
 #+-------------------------
-#| Console Text Styles
+# Console Text Styles
 sIntro() {
     echo -e $P"+-----------------------------------------------------------------------------+"
     echo -e $P"|$S _________                        __          ____  __.                       "
@@ -109,7 +109,7 @@ sIntro() {
     echo -e $P"|$S  \______  /|__|   / ____||   __/|__|  \____/|____|__ (____  /____  >__|_|  / "
     echo -e $P"|$S         \/        \/     |__|                       \/    \/     \/      \/  "
     echo -e $P"+-----------------------------------------------------------------------------+"
-    echo -e $P"|$S Project: $Project   $P|$S Version: $Version   $P|$S Platform: $(cPlatform)"
+    echo -e $P"|$S Project: $Project   $P|$S Version: $Version   $P|$S Platform: $(checkPlatform)"
     echo -e $P"+-----------------------------------------------------------------------------+"$RS
 }
 sTitle() {
@@ -141,22 +141,23 @@ sGraphQL() {
     echo -e $P"|$T   $1"$RS
 }
 #+---------------------------------------------+#
-#| Functions                                   |#
+# Functions
 #+---------------------------------------------+#
-#| Check: Debugging
+# Check: Debugging
 function debug() {
     if [ "$Debug" == 1 ]; then echo "$1"; fi
 }
 
-#| Exit: Error with Code (check Docs for ErrorCodes )
+# Exit: Error with Code (check Docs for ErrorCodes )
 function errCode()
 {
   echo -e $F">Error: $1"$RS 1>&2
+  stopSpinner $?
   exit 1
 }
 
-#| Check: ROOT
-function cRoot() { 
+# Check: ROOT
+function checkRoot() { 
     debug "Check: ROOT"
     if [ "$EUID" -ne 0 ]; then
         sudo echo -ne "\r"
@@ -164,8 +165,8 @@ function cRoot() {
     debug "Check: ROOT > $EUID"
 }
 
-#| Check: Platform
-function cPlatform() {
+# Check: Platform
+function checkPlatform() {
     debug "Check: Platform"
     if grep -q icrosoft /proc/version; then
         PLATFORM="WSL"
@@ -176,8 +177,8 @@ function cPlatform() {
     echo $PLATFORM
 }
 
-#| Check: Settings
-function cSettings() {
+# Check: Settings
+function checkSettings() {
     if [ -f "settings.conf" ]; then
         source settings.conf
     else
@@ -186,8 +187,8 @@ function cSettings() {
     fi
 }
 
-#| Check: Build Params
-function cBuildParams() {
+# Check: Build Params
+function checkBuildParams() {
     BUILDPARAMS="https://download.nine-chronicles.com/apv.json"
     APV=`curl --silent $BUILDPARAMS | jq -r '.apv'`
     DOCKERIMAGE=`curl --silent $BUILDPARAMS | jq -r '.docker'`
@@ -197,23 +198,63 @@ function cBuildParams() {
     CurlSnap2=`curl -s -w '%{time_connect}' -o /dev/null $SNAPSHOT1`
 
     if [[ $CurlSnap1 > $CurlSnap2 ]]; then
-        SNAPSHOT=`echo $SNAPSHOT1.zip`
+        if [[ `wget -S --spider $SNAPSHOT1.zip  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+            SNAPSHOT=`echo $SNAPSHOT1.zip`
+        else
+            SNAPSHOT=`echo $SNAPSHOT0.zip`
+        fi
     else
-        SNAPSHOT=`echo $SNAPSHOT0.zip`
+        if [[ `wget -S --spider $SNAPSHOT1.zip  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
+            SNAPSHOT=`echo $SNAPSHOT0.zip`
+        else
+            SNAPSHOT=`echo $SNAPSHOT1.zip`
+        fi
     fi
 
 }
 
+function optionDonate() {
+    sLL
+    sTitle "Feel like making a small donation?"
+    sEntry "CryptoKasm Public ID:$C 0xc17fC5cC7df1757D656B2431B3621b42E556B523$RS"
+    #echo -e $P">$C You can do so by running the command: ./9c-swarm-miner.sh --donate"$RS
+}
+
+function displayDonate() {
+    sLL
+    sTitle "Donate to CryptoKasm"
+    sEntry "For security purposes we require you to copy and paste our address as a way for confirmation"
+    sEntry "CryptoKasm Public ID:$C 0xc17fC5cC7df1757D656B2431B3621b42E556B523$RS"
+    sSpacer
+    read -p "$(echo -e $P"|$S CryptoKasm Public ID: "$RS)" playerPublicID
+    read -p "$(echo -e $P"|$S Amount of NCG to donate: "$RS)" amountNCG
+    sSpacer
+    read -p "$(echo -e $P"|$S Are you sure you want to send $C$amountNCG$S NCG to Player ID: $C$playerPublicID$S? (Y/n) "$RS)" confirmDonate
+    sSpacer
+    if [[ $confirmDonate == [yY] || $confirmDonate == [yY][eE][sS] ]]; then
+        sAction "Sent successfully!"
+        sAction "Transaction ID:$C 17bb2f568f41bd7964a1e79ceeab6f5132df66f4e652f6f5601a80d42ee4f6a8"
+        sSpacer
+        sAction "Thank you for your donation! We really appreciate it!"
+        sAction "Need help or support? Dont hesitate to contact us!"
+    else
+        exit 0
+    fi
+    sLL
+}
+
 ###############################################
 function ckMain() {
-    sIntro
-    sTitle "Setup"
-    sEntry "curl..."
-    cRoot
-    cPlatform
-    startSpinner "Testing: Spinner"
-    sleep 5
-    stopSpinner $?
+    #sIntro
+    #sTitle "Setup"
+    #sEntry "curl..."
+    #checkRoot
+    #checkPlatform
+    #startSpinner "Testing: Spinner"
+    #sleep 5
+    #stopSpinner $?
+    #optionDonate
+    displayDonate
 }
 ###############################################
 #ckMain

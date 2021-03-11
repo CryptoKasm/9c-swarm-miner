@@ -2,7 +2,7 @@
 source bin/cklib.sh
 
 # Check: ROOT
-cRoot
+checkRoot
 
 # Set permissions for this project
 checkPermissions() {
@@ -79,6 +79,7 @@ clean() {
         sudo rm -rf latest-snapshot
         sudo rm -f 9c-main-snapshot.zip
         sudo rm -rf logs
+        sudo rm -rf vault
     elif [[ "$1" == "2" ]]; then
         sudo rm -f docker-compose.yml
         sudo rm -f settings.conf
@@ -94,9 +95,9 @@ clean() {
 # Autostart: Logging Docker Containers
 autoLog() {
     sLL
-    sTitle "Auto Logging Filers: Mined a block | reorged | Append failed"
+    sTitle "Auto Logging Filters: Mined a block | reorged | mining | Append failed"
     export GREP_COLORS='ms=1;92'
-    docker-compose logs --tail=1000 -f | grep --color -i -E 'Mined a block|reorged|Append failed'
+    docker-compose logs --tail=1000 -f | grep --color -i -E 'Mined a block|reorged|mining|Append failed'
 }
 
 # Display Log Commands
@@ -111,15 +112,18 @@ displayLogCmds() {
     sTitle "Linux Monitor (Mined Blocks Only):"
     sAction "docker-compose logs --tail=100 -f | grep -A 10 --color -i 'Mined a block'"
     sTitle "Linux Monitor (Mined/Reorg/Append failed events):"
-    sAction "docker-compose logs --tail=100 -f | grep --color -i -E 'Mined a block|reorged|Append failed'"
+    sAction "docker-compose logs --tail=100 -f | grep --color -i -E 'Mined a block|reorged|mining|Append failed'"
+}
+
+# Asks if user wants to start logging
+runLogging() {
     sSpacer
-    read -p "$(echo -e $S"> Would you like to run auto-logging ['Mined a block|reorged|Append failed'] (Y/n)?: "$RS)" optionLog
+    read -p "$(echo -e $P">$S Would you like to run auto-logging ['Mined a block|reorge|mining|Append failed'] (Y/n)?: "$RS)" optionLog
     if [[ $optionLog == [yY] || $optionLog == [yY][eE][sS] ]]; then
         autoLog
     else
         exit 0
     fi
-
 }
 
 # Update
@@ -128,7 +132,7 @@ updateMain() {
     sTitle "Checking for updates"
 
     startSpinner "Shutting down docker containers:"
-    docker-compose down -v --remove-orphans
+    docker-compose down -v &> /dev/null
     stopSpinner $?
 
     startSpinner "Cleaning old files:"
@@ -143,7 +147,7 @@ updateMain() {
 
     ./bin/build-config.sh --update
 
-    ./bin/setup.sh --perms
+    ./bin/setup.sh --update
 }
 
 # Start Docker Containers
@@ -157,6 +161,15 @@ startDocker() {
     stopSpinner $?
 }
 
+# Check: Docker Logs
+checkDockerLog() {
+    if [[ "$NC_EMAIL" == 0 ]]; then
+        ./bin/email.sh --disable
+    else
+        ./bin/email.sh --enable
+    fi
+}
+
 ###############################
 Main() {
     sIntro
@@ -164,9 +177,12 @@ Main() {
     checkFirstRun
     preCheck
     checkCronTab
+    checkDockerLog
     checkSnapshot
     startDocker
     displayLogCmds
+    optionDonate
+    runLogging
 }
 ###############################
 if [ "$1" == "--setup" ]; then
@@ -174,6 +190,12 @@ if [ "$1" == "--setup" ]; then
     exit 0
 elif [ "$1" == "--update" ]; then
     updateMain
+    exit 0
+elif [ "$1" == "--stop" ]; then
+    docker-compose stop
+    exit 0
+elif [ "$1" == "--donate" ]; then
+    #displayDonate
     exit 0
 elif [ "$1" == "--perms" ]; then
     checkPermissions
@@ -192,6 +214,12 @@ elif [ "$1" == "--clean-all" ]; then
     clean "2"
 elif [ "$1" == "--check-gold" ]; then
     ./bin/graphql-query.sh --check-gold
+elif [ "$1" == "--send-logs" ]; then
+    ./bin/email.sh --send
+elif [ "$1" == "--vol-check" ]; then
+    ./bin/manage-snapshot.sh --volume
+elif [ "$1" == "--logging" ]; then
+    displayLogCmds
 else
     Main
     exit 0

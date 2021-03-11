@@ -2,10 +2,10 @@
 source bin/cklib.sh
 
 # Check: ROOT
-cRoot
+checkRoot
 
 # Check: Settings.conf
-cSettings
+checkSettings
 
 # Variables
 CronPath="PATH=/bin:/usr/bin:/usr/local/bin"

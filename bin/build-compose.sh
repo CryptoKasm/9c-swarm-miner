@@ -1,7 +1,7 @@
 #!/bin/bash
 source bin/cklib.sh
 
-cSettings
+checkSettings
 
 # Build: Compose File
 buildComposeFile() {
@@ -82,7 +82,7 @@ composeMain() {
     sL
     sTitle "Building docker-compose.yml"
     startSpinner "Writing docker-compose.yml:"
-    cBuildParams
+    checkBuildParams
     
     if [ -f "docker-compose.yml" ]; then
         rm -f docker-compose.yml 

@@ -118,7 +118,7 @@ configMain() {
 case $1 in
 
   --update)
-    forceRefresh
+    updateConfig
     exit 0
     ;;
 

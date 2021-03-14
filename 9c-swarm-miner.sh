@@ -244,7 +244,6 @@ case $1 in
  
   --crontab)
     docker-compose stop
-    bin/manage-snapshot.sh
     docker-compose up -d
     exit 0
     ;;
@@ -258,7 +257,12 @@ case $1 in
     ./bin/graphql-query.sh --check-gold
     exit 0
     ;;
- 
+
+  --help)
+    #TODO Add help text to explain each command and usage
+    exit 0
+    ;;
+
   *)
     Main
     exit 0

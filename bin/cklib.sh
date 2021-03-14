@@ -213,16 +213,47 @@ function cBuildParams() {
 
 }
 
+function optionDonate() {
+    sL
+    sTitle "Feel like making a small donation?"
+    echo -e $C"> You can do so by running the command: ./9c-swarm-miner.sh --donate"$RS
+}
+
+function displayDonate() {
+    sLL
+    sTitle "Donate to CryptoKasm"
+    sEntry "For security purposes we require you to copy and paste our address as a way for confirmation"
+    sEntry "CryptoKasm Public ID:$C 0xc17fC5cC7df1757D656B2431B3621b42E556B523$RS"
+    sSpacer
+    read -p "$(echo -e $P"|$S CryptoKasm Public ID: "$RS)" playerPublicID
+    read -p "$(echo -e $P"|$S Amount of NCG to donate: "$RS)" amountNCG
+    sSpacer
+    read -p "$(echo -e $P"|$S Are you sure you want to send $C$amountNCG$S NCG to Player ID: $C$playerPublicID$S? (Y/n) "$RS)" confirmDonate
+    sSpacer
+    if [[ $confirmDonate == [yY] || $confirmDonate == [yY][eE][sS] ]]; then
+        sAction "Sent successfully!"
+        sAction "Transaction ID:$C 17bb2f568f41bd7964a1e79ceeab6f5132df66f4e652f6f5601a80d42ee4f6a8"
+        sSpacer
+        sAction "Thank you for your donation! We really appreciate it!"
+        sAction "Need help or support? Dont hesitate to contact us!"
+    else
+        exit 0
+    fi
+    sLL
+}
+
 ###############################################
 function ckMain() {
-    sIntro
-    sTitle "Setup"
-    sEntry "curl..."
-    cRoot
-    cPlatform
-    startSpinner "Testing: Spinner"
-    sleep 5
-    stopSpinner $?
+    #sIntro
+    #sTitle "Setup"
+    #sEntry "curl..."
+    #cRoot
+    #cPlatform
+    #startSpinner "Testing: Spinner"
+    #sleep 5
+    #stopSpinner $?
+    #optionDonate
+    displayDonate
 }
 ###############################################
 #ckMain

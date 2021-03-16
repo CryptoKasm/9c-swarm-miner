@@ -151,13 +151,13 @@ function debug() {
 #| Exit: Error with Code (check Docs for ErrorCodes )
 function errCode()
 {
-  echo -e $F">Error: $1"$RS 1>&2
-  stopSpinner $?
-  exit 1
+    echo -e $F">Error: $1"$RS 1>&2
+    stopSpinner $?
+    exit 1
 }
 
 #| Check: ROOT
-function cRoot() { 
+function cRoot() {
     debug "Check: ROOT"
     if [ "$EUID" -ne 0 ]; then
         sudo echo -ne "\r"

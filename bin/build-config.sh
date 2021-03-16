@@ -19,9 +19,9 @@ defaultOptions() {
 # Write: settings.conf
 writeConfig() {
     if [ -f "settings.conf" ]; then
-        echo "   --File Found: settings.conf" 
+        echo "   --File Found: settings.conf"
     else
-        cat > settings.conf << EOF
+        cat >settings.conf <<EOF
 # Nine Chronicles - CryptoKasm Swarm Miner
 
 # Turn on/off debugging for this script (1 ON/0 OFF)
@@ -39,10 +39,10 @@ NC_PUBLIC_KEY=$NC_4
 # Amount of Miners **DOCKER CONTAINERS**
 NC_MINERS=$NC_5
 
-# Set MAX RAM Per Miner **PROTECTION FROM MEMORY LEAKS** 
+# Set MAX RAM Per Miner **PROTECTION FROM MEMORY LEAKS**
 NC_RAM_LIMIT=$NC_6
 
-# Set MIN RAM Per Miner **SAVES RESOURCES FOR THAT CONTAINER** 
+# Set MIN RAM Per Miner **SAVES RESOURCES FOR THAT CONTAINER**
 NC_RAM_RESERVE=$NC_7
 
 # Refresh Snapshot each run (NATIVE LINUX ONLY 4 NOW) (1 ON/0 OFF)

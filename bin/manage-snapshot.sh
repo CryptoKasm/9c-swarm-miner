@@ -32,16 +32,16 @@ refreshSnapshot() {
     startSpinner "Refreshing snapshot:"
 
     {
-    docker-compose down -v    # Stops & deletes environment **snapshot**
-    docker-compose up -d        # Restarts to recreate clean environment
-    docker-compose stop         # Stops cleaned environment for snapshot update
+        docker-compose down -v    # Stops & deletes environment **snapshot**
+        docker-compose up -d        # Restarts to recreate clean environment
+        docker-compose stop         # Stops cleaned environment for snapshot update
     } &> /dev/null
-    
+
     if [ -d "$NC_SNAPSHOT" ]; then
         rm -rf latest-snapshot/* &> /dev/null
-        
-        if [ -f $NC_SNAPZIP ]; then 
-            rm -f $NC_SNAPZIP &> /dev/null 
+
+        if [ -f $NC_SNAPZIP ]; then
+            rm -f $NC_SNAPZIP &> /dev/null
         fi
     else
         mkdir -p latest-snapshot &> /dev/null
@@ -60,7 +60,7 @@ testVol() {
     sLL
     sTitle "Snapshot Management: $(cPlatform)"
     for OUTPUT in $(docker ps -aqf "name=^9c-swarm-miner" --no-trunc)
-        do
+    do
         Dname=$(docker ps -af "id=$OUTPUT" --format {{.Names}})
         VolChecker=$(docker exec $OUTPUT [ -d "/app/data/9c-main" ])
         VolCheckerID=$?
@@ -68,10 +68,10 @@ testVol() {
             sEntry "$Dname Snapshot Volumes are missing!"
             cd latest-snapshot
             copyVolume
-                else
+        else
             sEntry "$Dname Snapshot Volumes are current!"
         fi
-        done
+    done
     sLL
 }
 

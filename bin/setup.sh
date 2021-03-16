@@ -1,7 +1,7 @@
 #!/bin/bash
 source bin/cklib.sh
 
-#| Check: ROOT
+# Check: ROOT
 checkRoot
 
 # Install: Curl
@@ -159,12 +159,14 @@ checkAptUpdate() {
     stopSpinner $?
 }
 
+# Dispaly text if first setup
 relogginText() {
     sLL
     sTitle "Log out and then log in to complete the setup! Then re-run this script!"
     echo
 }
 
+# Dispaly text if updating
 updateText() {
     sLL
     sTitle "Update complete!"
@@ -187,15 +189,18 @@ setupMain() {
     buildCompose
 }
 ###############################
-if [ "$1" == "--update" ]; then
+case $1 in
+
+  --update)
     setupMain
     updateText
     exit 0
-elif [ "$1" == "--perms" ]; then
-    checkPerms
-    exit 0
-else
+    ;;
+
+  *)
     setupMain
     relogginText
     exit 0
-fi
+    ;;
+
+esac

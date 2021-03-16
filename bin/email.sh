@@ -99,19 +99,30 @@ emailMain() {
     sTitle "Email"
 }
 ###############################
-if [ "$1" == "--enable" ]; then
+case $1 in
+
+  --enable)
     emailMain
     enablePostFix
     exit 0
-elif [ "$1" == "--disable" ]; then
+    ;;
+
+  --disable)
     emailMain
     disablePostFix
     exit 0
-elif [ "$1" == "--send" ]; then
+    ;;
+
+  --send)
     emailMain
     SendDockerLogs
-else
+    exit 0
+    ;;
+
+  *)
     emailMain
     installPostFix
     exit 0
-fi
+    ;;
+
+esac

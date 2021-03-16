@@ -60,16 +60,24 @@ cronMain() {
     sTitle "CronTab"
 }
 ###############################
-if [ "$1" == "--enable" ]; then
+case $1 in
+
+  --enable)
     cronMain
     enableCron
     exit 0
-elif [ "$1" == "--disable" ]; then
+    ;;
+
+  --disable)
     cronMain
     disableCron
     exit 0
-else
+    ;;
+
+  *)
     cronMain
     installCronTab
     exit 0
-fi
+    ;;
+
+esac

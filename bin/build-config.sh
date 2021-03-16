@@ -36,7 +36,7 @@ NC_PRIVATE_KEY=$NC_3
 # Nine Chronicles Public Key **ALLOWS QUERY FOR NCG**
 NC_PUBLIC_KEY=$NC_4
 
-# Amount of Miners **DOCKER CONTAINERS**
+# Amount of Miners **DOCKER CONTAINERS** [MAX: $minerLimit]
 NC_MINERS=$NC_5
 
 # Set MAX RAM Per Miner **PROTECTION FROM MEMORY LEAKS**

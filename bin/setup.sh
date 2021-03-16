@@ -10,8 +10,8 @@ installCurl() {
     if ! [ -x "$(command -v curl)" ]; then
         sudo apt install curl -y &> /dev/null
 
-        if ! [ -x "$(command -v curl)" ]; then 
-            errCode "Can't install 'curl'" 
+        if ! [ -x "$(command -v curl)" ]; then
+            errCode "Can't install 'curl'"
         fi
     fi
     stopSpinner $?
@@ -23,8 +23,8 @@ installUnzip() {
     if ! [ -x "$(command -v unzip)" ]; then
         sudo apt install unzip -y &> /dev/null
 
-        if ! [ -x "$(command -v unzip)" ]; then 
-            errCode "Can't install 'unzip'" 
+        if ! [ -x "$(command -v unzip)" ]; then
+            errCode "Can't install 'unzip'"
         fi
     fi
     stopSpinner $?
@@ -37,26 +37,26 @@ installDocker() {
         if [ $(checkPlatform) = "NATIVE" ]; then
             # Removing leftovers if Docker is not found
             {
-            sudo apt remove --yes docker docker-engine docker.io containerd runc
-            sudo apt update
-            sudo apt --yes --no-install-recommends install apt-transport-https ca-certificates
+                sudo apt remove --yes docker docker-engine docker.io containerd runc
+                sudo apt update
+                sudo apt --yes --no-install-recommends install apt-transport-https ca-certificates
 
-            wget --quiet --output-document=- https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-            sudo add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable"
-            sudo apt update
+                wget --quiet --output-document=- https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+                sudo add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable"
+                sudo apt update
 
-            sudo apt --yes --no-install-recommends install docker-ce docker-ce-cli containerd.io
-            sudo usermod --append --groups docker "$USER"
-            sudo systemctl enable docker
+                sudo apt --yes --no-install-recommends install docker-ce docker-ce-cli containerd.io
+                sudo usermod --append --groups docker "$USER"
+                sudo systemctl enable docker
             } &> /dev/null
 
             if ! [ -x "$(command -v unzip)" ]; then
-                stopSpinner $? 
-                errCode "Can't install 'docker'" 
+                stopSpinner $?
+                errCode "Can't install 'docker'"
             fi
         else
             stopSpinner $?
-            errCode "Start Docker Desktop on Wondows"          
+            errCode "Start Docker Desktop on Wondows"
         fi
     fi
     stopSpinner $?
@@ -73,10 +73,10 @@ installCompose() {
 
     if ! [ -x "$(command -v docker-compose)" ]; then
         sudo curl -# -L https://github.com/docker/compose/releases/download/$(compose_release)/docker-compose-$(uname -s)-$(uname -m) \
-        -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose
-        
+            -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose
+
         if ! [ -x "$(command -v unzip)" ]; then
-            stopSpinner $? 
+            stopSpinner $?
             errCode "Can't install 'docker-compose'"
         fi
     fi
@@ -89,8 +89,8 @@ installJq() {
     if ! [ -x "$(command -v jq)" ]; then
         sudo apt install jq -y &> /dev/null
 
-        if ! [ -x "$(command -v jq)" ]; then 
-            errCode "Can't install 'jq'" 
+        if ! [ -x "$(command -v jq)" ]; then
+            errCode "Can't install 'jq'"
         fi
     fi
     stopSpinner $?
@@ -102,8 +102,8 @@ installZip() {
     if ! [ -x "$(command -v zip)" ]; then
         sudo apt install zip -y &> /dev/null
 
-        if ! [ -x "$(command -v zip)" ]; then 
-            errCode "Can't install 'zip'" 
+        if ! [ -x "$(command -v zip)" ]; then
+            errCode "Can't install 'zip'"
         fi
     fi
     stopSpinner $?
@@ -111,7 +111,7 @@ installZip() {
 
 # Install: postfix
 installPostFix() {
- ./bin/email.sh
+    ./bin/email.sh
 }
 
 # Install: CronTab

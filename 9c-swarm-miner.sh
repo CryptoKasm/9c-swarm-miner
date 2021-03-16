@@ -118,7 +118,7 @@ displayLogCmds() {
 # Asks if user wants to start logging
 runLogging() {
     sSpacer
-    read -p "$(echo -e $P">$S Would you like to run auto-logging ['Mined a block|reorge|mining|Append failed'] (Y/n)?: "$RS)" optionLog
+    read -r -p "$(echo -e "$S""> Would you like to run auto-logging ['Mined a block|reorged|Append failed'] (Y/n)?: ""$RS")" optionLog
     if [[ $optionLog == [yY] || $optionLog == [yY][eE][sS] ]]; then
         autoLog
     else
@@ -155,7 +155,7 @@ startDocker() {
     sL
     sTitle "Docker"
     startSpinner "Initiating containers:"
-    { 
+    {
         docker-compose up -d
     } &> /dev/null
     stopSpinner $?

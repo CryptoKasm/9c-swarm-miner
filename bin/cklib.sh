@@ -151,9 +151,9 @@ function debug() {
 # Exit: Error with Code (check Docs for ErrorCodes )
 function errCode()
 {
-  echo -e $F">Error: $1"$RS 1>&2
-  stopSpinner $?
-  exit 1
+    echo -e $F">Error: $1"$RS 1>&2
+    stopSpinner $?
+    exit 1
 }
 
 # Check: ROOT

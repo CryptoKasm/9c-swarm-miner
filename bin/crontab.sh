@@ -15,7 +15,7 @@ CronService="cron"
 
 # Create Log folder
 if [ ! -d "logs" ]; then
-        mkdir -p logs
+    mkdir -p logs
 fi
 
 
@@ -41,11 +41,11 @@ installCronTab() {
     if ! [ -x "$(command -v cron)" ]; then
         sudo apt install cron -y &> /dev/null
 
-        if ! [ -x "$(command -v cron)" ]; then 
-            errCode "Can't install 'cron'" 
+        if ! [ -x "$(command -v cron)" ]; then
+            errCode "Can't install 'cron'"
         fi
     fi
-    
+
     Ser=$(pgrep $CronService)
     if [[ -z $Ser ]]; then
         sudo service cron start

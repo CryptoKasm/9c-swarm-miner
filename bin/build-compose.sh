@@ -90,10 +90,8 @@ composeMain() {
     
     if [ -f "docker-compose.yml" ]; then
         rm -f docker-compose.yml
-        checkCores
         buildComposeFile
     else
-        checkCores
         buildComposeFile
     fi
     cleanTemp

@@ -42,7 +42,7 @@ function _spinner() {
     case $1 in
         start)
             # calculate the column where spinner and status msg will be displayed
-            let column=$(tput cols)-${#2}-60
+            let column=$(tput cols)-${#2}-100
             # display message and position the cursor in $column column
             #echo -ne $P"|$T --$1    "$RS
             echo -ne $P"|$T --${2}    "$RS
@@ -208,7 +208,6 @@ function checkCores() {
         :
     fi
 }
-checkCores
 
 # Check: Build Params
 function checkBuildParams() {
@@ -268,16 +267,7 @@ function displayDonate() {
 
 ###############################################
 function ckMain() {
-    #sIntro
-    #sTitle "Setup"
-    #sEntry "curl..."
-    #checkRoot
-    #checkPlatform
-    #startSpinner "Testing: Spinner"
-    #sleep 5
-    #stopSpinner $?
-    #optionDonate
-    displayDonate
+   checkCores
 }
 ###############################################
 #ckMain

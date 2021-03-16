@@ -1,6 +1,9 @@
 #!/bin/bash
 source bin/cklib.sh
 
+# Check cores
+checkCores
+
 # Default Options
 defaultOptions() {
     NC_1='0'
@@ -11,7 +14,7 @@ defaultOptions() {
     NC_6='6144M'
     NC_7='2048M'
     NC_8='1'
-    NC_9='0'
+    NC_9='2'
     NC_10='1'
     NC_11='1'
 }

@@ -4,25 +4,6 @@ source bin/cklib.sh
 # Check: Settings.conf
 checkSettings
 
-checkCores() {
-    THREADS="$(nproc --all)"
-    CORES=$(echo "$THREADS" 2 | awk '{print $1/$2}')
-    
-    if [[ $NC_MINERS -ge "2" && $CORES -ge "2" || $CORES -le "4" ]]; then
-        NC_MINERS=1
-    elif [[ $NC_MINERS -ge "3" && $CORES -ge "5" || $CORES -le "8" ]]; then
-        NC_MINERS=2
-    elif [[ $NC_MINERS -ge "4" && $CORES -ge "9" || $CORES -le "12" ]]; then
-        NC_MINERS=3
-    elif [[ $NC_MINERS -ge "5" && $CORES -ge "13" || $CORES -le "16" ]]; then
-        NC_MINERS=5
-    elif [[ $NC_MINERS -ge "6" && $CORES -ge "17" ]]; then
-        NC_MINERS=5
-    else
-        :
-    fi
-}
-
 # Build: Compose File
 buildComposeFile() {
     COMPOSEFILE=docker-compose.yml

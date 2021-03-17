@@ -263,6 +263,21 @@ case $1 in
     exit 0
     ;;
 
+  --private-key)
+    ./bin/key.sh --private
+    exit 0
+    ;;
+
+  --public-key)
+    ./bin/key.sh --public
+    exit 0
+    ;;
+
+  --keys)
+    ./bin/key.sh --all
+    exit 0
+    ;;
+    
   *)
     Main
     exit 0

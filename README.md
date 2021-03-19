@@ -11,11 +11,15 @@
 
 #
 ### Notes: 
-- **Linux Users: Please skip down to [Section 2](#Linux) to begin install.**
-- **Windows Users: MAKE SURE TO START DOCKER, before continuing to [Section 2](#Linux).**
+- **<span style="color:green">TIP:</span> Linux Users: Please skip down to [Section 2](#Linux) to begin install.**
+
+- **<span style="color:green">TIP:</span> Windows Users: MAKE SURE TO START DOCKER, before continuing to [Section 2](#Linux).**
+
 - **<span style="color:red">WARNING:</span> Installing the Swarm Miner enables Hyper-V on Windows. This could cause issues with VMware Workstation if it is installed.**
-- <span style="color:red">**Some anti-virus software may flag the miner as malicious, please add an exception or disable and retry before contacting support.**</span>
-- <span style="color:red">**Those upgrading to v1.6.2-beta, MAKE SURE TO RUN BOTH COMMANDS: git pull && ./9c-swarm-miner.sh --update**</span>
+
+- **<span style="color:red">WARNING:</span> Some anti-virus software may flag the miner as malicious, please add an exception or disable and retry before contacting support.**
+
+- **<span style="color:red">WARNING:</span> Those upgrading to v1.6.2-beta, MAKE SURE TO RUN BOTH COMMANDS: git pull && ./9c-swarm-miner.sh --update**
 #
 <br>
 
@@ -90,21 +94,63 @@ $ git clone https://github.com/CryptoKasm/9c-swarm-miner.git $HOME/9c-swarm-mine
 $ cd $HOME/9c-swarm-miner
 ```
 
-3. ***Run Script (twice)***
+3. ***Run Script***
 ```bash
 # First run will setup system, each run after that will execute like normal
 $ ./9c-swarm-miner.sh
-# Follow instuctions
+# Follow terminal instuctions
 ```
 
-3. ***Edit Configuration File***
 ```bash
-# Quick Edit
-$ nano settings.conf
+# Usage:
+./9c-swarm-miner.sh [OPTION] #Run normally, without options
+    --start             # Starts miners in docker
+    --stop              # Stops docker miners
+    --update            # Updates source code
+    --setup             # Installs prereqs for script
+    --settings          # Edit settings.conf
+    --refresh           # Refresh snapshot if older than 2hrs
+    --force-refresh     # Force refresh snapshot
+    --clean             # Cleans refreshable files (downloaded/generated files)
+    --clean-all         # Fresh Install (downloaded/generated files,settings)
+    --check-vol         # Checks if volume data matches data in 'latest-snapshot' directory
+    --check-permissions # Makes files runable and editable
+    --logging           # Display logging commands for quick copy/paste
+    --send-logs         # Sends your docker logs to our support email
+    --check-gold        # Checks current gold balance via GraphQL query
+    --keys              # Display current private/public keys and prompt to update
+    --private-key       # Display current private key and prompt to update
+    --pubilc-key        # Display current public key and prompt to update
 ```
-```bash 
-# Example Configuration
 
+<br>
+
+* ***Congratulations! You are now mining NGC like a boss via Docker!***<br>
+
+<br>
+
+***Extra Features***
+```bash
+# Check: Nine Chronicles Gold Balance
+./9c-swarm-miner.sh --check-gold
+```
+
+***Update***
+```bash
+# To update run these commands from the 9c-swarm-miner directory
+git pull
+./9c-swarm-miner.sh --update
+```
+
+<br>
+
+## References
+- https://github.com/planetarium/NineChronicles.Headless
+
+<br>
+
+# Example: Settings.conf
+```bash 
 # Nine Chronicles - CryptoKasm Swarm Miner
 
 # Turn on/off debugging for this script (1 ON/0 OFF)
@@ -137,49 +183,6 @@ NC_CRONJOB_AUTO_RESTART=0
 # Enable GraphQL Query Commands
 NC_GRAPHQL_QUERIES=1
 ```
-
-4. ***Run Script***
-```bash
-# Now you can run it like normal.
-./9c-swarm-miner.sh
-```
-
-```bash
-# Usage:
-./9c-swarm-miner.sh [OPTION] #Run normally, without options
-    --setup             # Installs prereqs for script
-    --update            # Updates source code
-    --refresh           # Refresh snapshot if older than 2hrs
-    --force-refresh     # Force refresh snapshot
-    --clean             # Cleans refreshable files (downloaded/generated files)
-    --clean-all         # Fresh Install (downloaded/generated files,settings)
-    --check-gold        # Checks current gold balance via GraphQL query
-```
-
-<br>
-
-* ***Congratulations! You are now mining NGC like a boss via Docker!***<br>
-
-<br>
-
-***Extra Features***
-```bash
-# Check: Nine Chronicles Gold Balance
-./9c-swarm-miner.sh --check-gold
-```
-
-***Update***
-```bash
-# To update run these commands from the 9c-swarm-miner directory
-git pull
-./9c-swarm-miner.sh --update
-```
-
-<br>
-
-## References
-- https://github.com/planetarium/NineChronicles.Headless
-
 <br>
 
 # Issues & Solutions

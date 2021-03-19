@@ -29,7 +29,7 @@ enablePostFix() {
     else
         sudo usermod -c $NC_PUBLIC_KEY $USER
     fi
-    sudo systemctl restart postfix &> /dev/null
+    sudo service postfix restart &> /dev/null
     stopSpinner $?
 }
 
@@ -80,7 +80,7 @@ SendDockerLogs() {
 ###############################
 emailMain() {
     sL
-    sTitle "Email logs to support"
+    sTitle "Email"
 }
 ###############################
 case $1 in

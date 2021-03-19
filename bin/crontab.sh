@@ -24,6 +24,10 @@ enableCron() {
     startSpinner "Enabled crontab entry:"
     ( sudo crontab -l | grep -v -F "$CronPath" ; echo "$CronPath" ) | sudo crontab -
     ( sudo crontab -l | grep -v -F "$CronCMD" ; echo "$CronJob" ) | sudo crontab -
+    cron_process_id=$(pidof cron)
+    if [[ -z $cron_process_id ]]; then
+        sudo cron
+    fi
     stopSpinner $?
 }
 

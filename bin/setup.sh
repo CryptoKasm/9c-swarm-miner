@@ -111,12 +111,37 @@ installZip() {
 
 # Install: postfix
 installPostFix() {
-    ./bin/email.sh
+    startSpinner "Installing postfix:"
+    if ! [ -x "$(command -v postfix)" ]; then
+        sudo apt install debconf-utils -y &> /dev/null
+        echo "postfix postfix/mailname string example.com" | sudo debconf-set-selections
+        echo "postfix postfix/main_mailer_type string 'Internet Site'" | sudo debconf-set-selections
+        sudo apt install postfix -y &> /dev/null
+
+        if ! [ -x "$(command -v postfix)" ]; then
+            errCode "Can't install 'postfix'"
+        fi
+    fi
+    stopSpinner $?
 }
 
 # Install: CronTab
 installCronTab() {
-    ./bin/crontab.sh
+    startSpinner "Checking crontab:"
+    if ! [ -x "$(command -v cron)" ]; then
+        sudo apt install cron -y &> /dev/null
+
+        if ! [ -x "$(command -v cron)" ]; then
+            errCode "Can't install 'cron'"
+        fi
+    fi
+
+    Ser=$(pgrep cron)
+    if [[ -z $Ser ]]; then
+        sudo service cron start
+        echo -ne "\nsudo -i service cron start\n" >> /home/$USER/.bashrc
+    fi
+    stopSpinner $?
 }
 
 # Build: Settings.conf

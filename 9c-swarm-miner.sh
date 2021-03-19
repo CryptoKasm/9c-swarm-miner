@@ -206,7 +206,12 @@ case $1 in
     ./bin/setup.sh
     exit 0
     ;;
- 
+
+  --settings)
+    nano ./settings.conf
+    exit 0
+    ;;
+
   --refresh)
     ./bin/manage-snapshot.sh
     exit 0

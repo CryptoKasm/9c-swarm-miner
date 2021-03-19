@@ -39,25 +39,6 @@ disableCron() {
     stopSpinner $?
 }
 
-# Install: CronTab
-installCronTab() {
-    startSpinner "Checking crontab:"
-    if ! [ -x "$(command -v cron)" ]; then
-        sudo apt install cron -y &> /dev/null
-
-        if ! [ -x "$(command -v cron)" ]; then
-            errCode "Can't install 'cron'"
-        fi
-    fi
-
-    Ser=$(pgrep $CronService)
-    if [[ -z $Ser ]]; then
-        sudo service cron start
-        echo -ne "\nsudo -i service cron start\n" >> /home/$USER/.bashrc
-    fi
-    stopSpinner $?
-}
-
 ###############################
 cronMain() {
     sL
@@ -80,7 +61,6 @@ case $1 in
 
   *)
     cronMain
-    installCronTab
     exit 0
     ;;
 

@@ -7,23 +7,6 @@ checkRoot
 # Check: Settings.conf
 checkSettings
 
-
-# Install: postfix
-installPostFix() {
-    startSpinner "Installing postfix:"
-    if ! [ -x "$(command -v postfix)" ]; then
-        sudo apt install debconf-utils -y &> /dev/null
-        echo "postfix postfix/mailname string example.com" | sudo debconf-set-selections
-        echo "postfix postfix/main_mailer_type string 'Internet Site'" | sudo debconf-set-selections
-        sudo apt install postfix -y &> /dev/null
-
-        if ! [ -x "$(command -v postfix)" ]; then
-            errCode "Can't install 'postfix'"
-        fi
-    fi
-    stopSpinner $?
-}
-
 # Enable: postfix
 enablePostFix() {
     startSpinner "Enabled email entry:"
@@ -97,7 +80,7 @@ SendDockerLogs() {
 ###############################
 emailMain() {
     sL
-    sTitle "Email"
+    sTitle "Email logs to support"
 }
 ###############################
 case $1 in
@@ -122,7 +105,6 @@ case $1 in
 
   *)
     emailMain
-    installPostFix
     exit 0
     ;;
 

@@ -120,7 +120,7 @@ $ ./9c-swarm-miner.sh
     --check-gold        # Checks current gold balance via GraphQL query
     --keys              # Display current private/public keys and prompt to update
     --private-key       # Display current private key and prompt to update
-    --pubilc-key        # Display current public key and prompt to update
+    --public-key        # Display current public key and prompt to update
 ```
 
 <br>

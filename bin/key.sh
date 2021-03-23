@@ -23,7 +23,7 @@ changePrivateKey() {
         read -r -p "$(echo -e "$P"">$S Is this Private Key correct: $P""$NewPrK""$S? (Y/n): ""$RS")" NewPrvKey
         if [[ $NewPrvKey == [yY] || $NewPrvKey == [yY][eE][sS] ]]; then
             $(sed -i 's/^NC_PRIVATE_KEY=.*$/NC_PRIVATE_KEY='"$NewPrK"'/' settings.conf)
-            $(sed -i 's/\"--private-key=.*$/\"--private-key='"$NewPrK"'\",''/' docker-compose.yml)
+            $(sed -i 's/\"--miner-private-key=.*$/\"--miner-private-key='"$NewPrK"'\",''/' docker-compose.yml)
             sL
             echo -e "$P"">$C Private Key was successfully updated!""$RS"
             echo -e "$P""|$S   New Private Key: $P""$NewPrK""""$RS"
@@ -103,7 +103,7 @@ changeBothKeys() {
         if [[ $NewPblKey == [yY] || $NewPblKey == [yY][eE][sS] ]]; then
             $(sed -i 's/^NC_PUBLIC_KEY=.*$/NC_PUBLIC_KEY='"$NewPbK"'/' settings.conf)
             $(sed -i 's/^NC_PRIVATE_KEY=.*$/NC_PRIVATE_KEY='"$NewPrK"'/' settings.conf)
-            $(sed -i 's/\"--private-key=.*$/\"--private-key='"$NewPrK"'\",''/' docker-compose.yml)
+            $(sed -i 's/\"--miner-private-key=.*$/\"--miner-private-key='"$NewPrK"'\",''/' docker-compose.yml)
             sL
             echo -e "$P"">$C Private Key was successfully updated!""$RS"
             echo -e "$P""|$S   New Private Key: $P""$NewPrK""""$RS"

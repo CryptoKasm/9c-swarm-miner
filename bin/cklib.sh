@@ -1,7 +1,7 @@
 #!/bin/bash
 
 Debug=0
-Version="1.6.2-beta"
+Version="1.7.0-beta"
 Project="9c-swarm-miner"
 
 #+---------------------------------------------+#

@@ -59,7 +59,7 @@ EOF
       '--graphql-server',
       '--graphql-port=23061',
       '--graphql-secret-token-path=/secret/token',
-      "--private-key=$NC_PRIVATE_KEY",
+      "--miner-private-key=$NC_PRIVATE_KEY",
       '--log-minimum-level=$LOG_LEVEL']
     restart: always
 EOF

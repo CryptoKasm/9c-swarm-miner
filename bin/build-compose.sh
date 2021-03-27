@@ -4,9 +4,6 @@ source bin/cklib.sh
 # Check: Settings.conf
 checkSettings
 
-# Check cores
-checkCores
-
 # Build: Compose File
 buildComposeFile() {
     COMPOSEFILE=docker-compose.yml

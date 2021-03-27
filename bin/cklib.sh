@@ -177,19 +177,9 @@ function checkPlatform() {
     echo $PLATFORM
 }
 
-# Check: Settings
-function checkSettings() {
-    if [ -f "settings.conf" ]; then
-        source settings.conf
-    else
-        sAction "Please run setup! Then re-run this script"
-        exit 1
-    fi
-}
-
 # Check: Maximum Cores
 function checkCores() {
-   THREADS="$(nproc --all)"
+    THREADS="$(nproc --all)"
     CORES=$(echo "$THREADS" 2 | awk '{print $1/$2}')
     minerLimitDec=$(echo "$CORES" 4 | awk '{print $1/$2}')
     minerLimit=$(echo "$minerLimitDec" | awk '{print ($0-int($0)>0)?int($0)+1:int($0)}')
@@ -206,6 +196,17 @@ function checkCores() {
         NC_MINERS=5
     else
         :
+    fi
+}
+
+# Check: Settings
+function checkSettings() {
+    if [ -f "settings.conf" ]; then
+        source settings.conf
+        checkCores
+    else
+        sAction "Please run setup! Then re-run this script"
+        exit 1
     fi
 }
 

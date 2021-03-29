@@ -275,4 +275,4 @@ function ckMain() {
    checkSettings
 }
 ###############################################
-ckMain
+#ckMain

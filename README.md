@@ -125,7 +125,7 @@ $ ./9c-swarm-miner.sh
 
 <br>
 
-* ***Congratulations! You are now mining NGC like a boss via Docker!***<br>
+* ***Congratulations! You are now mining NCG like a boss via Docker!***<br>
 
 <br>
 

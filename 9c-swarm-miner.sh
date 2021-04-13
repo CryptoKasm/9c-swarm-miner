@@ -95,7 +95,7 @@ clean() {
 # Autostart: Logging Docker Containers
 autoLog() {
     sLL
-    sTitle "Auto Logging Filters: Mined a block | reorged | mining | Append failed"
+    sTitle "These logging filters will display below: Mined a block | reorged | mining | Append failed"
     export GREP_COLORS='ms=1;92'
     docker-compose logs --tail=1000 -f | grep --color -i -E 'Mined a block|reorged|mining|Append failed'
 }
@@ -117,6 +117,8 @@ displayLogCmds() {
 
 # Asks if user wants to start logging
 runLogging() {
+    sSpacer
+    sTitle "Miner is started! (May take up to 10+ mins for miner(s) to be fully operational)"
     sSpacer
     read -r -p "$(echo -e "$S""> Would you like to run auto-logging ['Mined a block|reorged|Append failed'] (Y/n)?: ""$RS")" optionLog
     if [[ $optionLog == [yY] || $optionLog == [yY][eE][sS] ]]; then

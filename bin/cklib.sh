@@ -183,12 +183,8 @@ function checkCores() {
     CORES=$(echo "$THREADS" 2 | awk '{print $1/$2}')
     minerLimitDec=$(echo "$CORES" 4 | awk '{print $1/$2}')
     minerLimit=$(echo "$minerLimitDec" | awk '{print ($0-int($0)>0)?int($0)+1:int($0)}')
-
-    if [[ $CORES -le "4" ]]; then
-        MAX_MINERS=1
-    elif [[ $CORES -le "8" ]]; then
-        MAX_MINERS=2
-    elif [[ $CORES -le "12" ]]; then
+    
+    if [[ $CORES -le "12" ]]; then
         MAX_MINERS=3
     elif [[ $CORES -le "16" ]]; then
         MAX_MINERS=5
@@ -196,7 +192,7 @@ function checkCores() {
         MAX_MINERS=5
     fi
 
-    if ! [ $NC_MINERS -le $MAX_MINERS ]; then
+    if [[ ! $NC_MINERS -le $MAX_MINERS ]]; then
         NC_MINERS=$MAX_MINERS
     else
         :

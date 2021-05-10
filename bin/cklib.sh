@@ -180,15 +180,14 @@ function checkPlatform() {
 # Check: Maximum Cores
 function checkCores() {
     THREADS="$(nproc --all)"
-    CORES=$(echo "$THREADS" 2 | awk '{print $1/$2}')
-    minerLimitDec=$(echo "$CORES" 4 | awk '{print $1/$2}')
+    minerLimitDec=$(echo "$THREADS" 4 | awk '{print $1/$2}')
     minerLimit=$(echo "$minerLimitDec" | awk '{print ($0-int($0)>0)?int($0)+1:int($0)}')
     
-    if [[ $CORES -le "12" ]]; then
+    if [[ $THREADS -le "12" ]]; then
         MAX_MINERS=3
-    elif [[ $CORES -le "16" ]]; then
+    elif [[ $THREADS -le "16" ]]; then
         MAX_MINERS=5
-    elif [[ $CORES -ge "17" ]]; then
+    elif [[ $THREADS -ge "17" ]]; then
         MAX_MINERS=5
     fi
 
@@ -268,7 +267,8 @@ function displayDonate() {
 ###############################################
 function ckMain() {
    #checkSettings
-   checkBuildParams
+   #checkBuildParams
+   checkSettings
 }
 ###############################################
 #ckMain

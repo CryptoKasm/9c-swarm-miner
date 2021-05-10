@@ -180,8 +180,7 @@ function checkPlatform() {
 # Check: Maximum Cores
 function checkCores() {
     THREADS="$(nproc --all)"
-    minerLimitDec=$(echo "$THREADS" 4 | awk '{print $1/$2}')
-    minerLimit=$(echo "$minerLimitDec" | awk '{print ($0-int($0)>0)?int($0)+1:int($0)}')
+    
     
     if [[ $THREADS -le "12" ]]; then
         MAX_MINERS=3
@@ -196,6 +195,9 @@ function checkCores() {
     else
         :
     fi
+    
+    minerLimit=$MAX_MINERS
+
 }
 
 # Check: Settings

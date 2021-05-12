@@ -216,24 +216,7 @@ function checkBuildParams() {
     BUILDPARAMS="https://download.nine-chronicles.com/apv.json"
     APV=`curl --silent $BUILDPARAMS | jq -r '.apv'`
     DOCKERIMAGE=`curl --silent $BUILDPARAMS | jq -r '.docker'`
-    SNAPSHOT0=`curl --silent $BUILDPARAMS | jq -r '."snapshotPaths:"[0]'`
-    SNAPSHOT1=`curl --silent $BUILDPARAMS | jq -r '."snapshotPaths:"[1]'`
-    CurlSnap1=`curl -s -w '%{time_connect}' -o /dev/null $SNAPSHOT0`
-    CurlSnap2=`curl -s -w '%{time_connect}' -o /dev/null $SNAPSHOT1`
-
-    if [[ $CurlSnap1 > $CurlSnap2 ]]; then
-        if [[ `wget -S --spider $SNAPSHOT1  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-            SNAPSHOT=`echo $SNAPSHOT1`
-        else
-            SNAPSHOT=`echo $SNAPSHOT0`
-        fi
-    else
-        if [[ `wget -S --spider $SNAPSHOT1  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-            SNAPSHOT=`echo $SNAPSHOT0`
-        else
-            SNAPSHOT=`echo $SNAPSHOT1`
-        fi
-    fi
+    SNAPSHOT=`curl --silent $BUILDPARAMS | jq -r '."snapshotPaths"[0]'`
 }
 
 function optionDonate() {
@@ -269,7 +252,7 @@ function displayDonate() {
 ###############################################
 function ckMain() {
    #checkSettings
-   #checkBuildParams
+   checkBuildParams
    checkSettings
 }
 ###############################################

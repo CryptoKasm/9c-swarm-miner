@@ -213,10 +213,21 @@ function checkSettings() {
 
 # Check: Build Params
 function checkBuildParams() {
-    BUILDPARAMS="https://download.nine-chronicles.com/apv.json"
-    APV=`curl --silent $BUILDPARAMS | jq -r '.apv'`
-    DOCKERIMAGE=`curl --silent $BUILDPARAMS | jq -r '.docker'`
-    SNAPSHOT=`curl --silent $BUILDPARAMS | jq -r '."snapshotPaths"[0]'`
+    BUILDPARAMS="https://download.nine-chronicles.com/apv.json?v=$RANDOM"
+    newBUILDPARAMS=$(curl $BUILDPARAMS \
+        -s \
+        -L \
+        -H "Cache-Control: no-cache, no-store, must-revalidate" \
+        -H "Pragma: no-cache" \
+        -H "Expires: 0")
+    APV=$(echo $newBUILDPARAMS | jq -r '.apv')
+    DOCKERIMAGE=$(echo $newBUILDPARAMS | jq -r '.docker')
+    SNAPSHOT=$(echo $newBUILDPARAMS | jq -r '."snapshotPaths"[0]')
+
+    echo $BUILDPARAMS
+    echo $APV
+    echo $DOCKERIMAGE
+    echo $SNAPSHOT
 }
 
 function optionDonate() {

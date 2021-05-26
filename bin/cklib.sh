@@ -224,10 +224,10 @@ function checkBuildParams() {
     DOCKERIMAGE=$(echo $newBUILDPARAMS | jq -r '.docker')
     SNAPSHOT=$(echo $newBUILDPARAMS | jq -r '."snapshotPaths"[0]')
 
-    echo $BUILDPARAMS
-    echo $APV
-    echo $DOCKERIMAGE
-    echo $SNAPSHOT
+    # echo $BUILDPARAMS
+    # echo $APV
+    # echo $DOCKERIMAGE
+    # echo $SNAPSHOT
 }
 
 function optionDonate() {

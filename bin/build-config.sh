@@ -17,6 +17,8 @@ defaultOptions() {
     NC_9='2'
     NC_10='1'
     NC_11='1'
+    NC_12='false'
+    NC_13='1'
 }
 
 # Write: settings.conf
@@ -59,6 +61,12 @@ NC_GRAPHQL_QUERIES=$NC_10
 
 #Enable Emailing to Support Team (0 OFF)
 NC_EMAIL=$NC_11
+
+#Enable Multithreaded docker image
+NC_THREADED_IMAGE=$NC_12
+
+#Number of threads
+NC_THREADS=$NC_13
 EOF
 
     fi
@@ -82,6 +90,8 @@ rebuildConfig() {
         NC_9="$NC_CRONJOB_AUTO_RESTART"
         NC_10="$NC_GRAPHQL_QUERIES"
         NC_11="$NC_EMAIL"
+        NC_12="$NC_THREADED_IMAGE"
+        NC_13="$NC_THREADS"
 
         writeConfig
 

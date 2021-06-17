@@ -55,6 +55,7 @@ EOF
       '--graphql-server',
       '--graphql-port=23061',
       '--graphql-secret-token-path=/secret/token',
+      $ADDTHREADS
       "--miner-private-key=$NC_PRIVATE_KEY",
       '--tip-timeout=120']
     restart: always
@@ -72,6 +73,15 @@ EOF
     done
 }
 
+# Enable custom docker image using threads
+useThreaded() {
+  if [[ "$NC_THREADED_IMAGE" == true ]]; then
+      DOCKERIMAGE="cryptokasm/ninechronicles-headless:v100050.T"
+      ADDTHREADS="'--miner-count=$NC_THREADS',"
+  else
+      ADDTHREADS=""
+  fi
+}
 # Clean: Temp Files
 cleanTemp() {
     rm -f $NEW
@@ -86,10 +96,9 @@ composeMain() {
     
     if [ -f "docker-compose.yml" ]; then
         rm -f docker-compose.yml
-        buildComposeFile
-    else
-        buildComposeFile
     fi
+    useThreaded
+    buildComposeFile
     cleanTemp
     stopSpinner $?
     exit 0

@@ -179,7 +179,7 @@ Main() {
     checkFirstRun
     preCheck
     checkCronTab
-    checkDockerLog
+    #checkDockerLog
     checkSnapshot
     startDocker
     displayLogCmds
